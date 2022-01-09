@@ -6,13 +6,13 @@ import './App.css';
 
 import SignIn from "./components/signin";
 import SignUp from "./components/signup";
-import Home from "./components/home";
+import Main from "./components/main";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={ <Home/> } />
+        <Route path="/" element={ <Main/> } />
         <Route path="sign-in" element={ <SignIn/> } />
         <Route path="sign-up" element={ <SignUp/> } />
       </Routes>

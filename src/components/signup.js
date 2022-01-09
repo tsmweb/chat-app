@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { CreateAccountService } from "../services/authService";
+import { createAccountService } from "../services/authService";
  
 const SignUp = () => {
     const [validated, setValidated] = useState(false);
@@ -21,7 +21,7 @@ const SignUp = () => {
             const name = form.name.value;
             const lastname = form.lastname.value;
             const password = form.password.value;
-            const resp = await CreateAccountService(id, name, lastname, password);
+            const resp = await createAccountService(id, name, lastname, password);
 
             if (resp.status === 201) {
                 setMessageAlert("Conta criada com sucesso!");
@@ -53,7 +53,7 @@ const SignUp = () => {
 
     return (
         <div className="auth-wrapper">
-            <div className="auth-container col-11">
+            <div className="auth-container">
                 <Alert variant={ variantAlert } 
                     className="mb-2" 
                     show={ showAlert } 
@@ -73,6 +73,7 @@ const SignUp = () => {
                                 type="text" 
                                 placeholder="ID"
                                 name="id"
+                                autoFocus
                                 required />
                             <Form.Control.Feedback type="invalid">
                                 Informe seu ID.
@@ -132,7 +133,7 @@ const SignUp = () => {
                         </Form.Group>
 
                         <div className="d-grid gap-2">
-                            <Button variant="primary" size="lg" type="submit">
+                            <Button variant="success" size="lg" type="submit">
                                 Inscrever-se
                             </Button>
                         </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-import { SignInService } from "../services/authService";
+import { signInService } from "../services/authService";
 import { setToken } from "../services/token";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -19,12 +19,13 @@ const SignIn = () => {
         if (form.checkValidity() === true) {
             const id = form.id.value;
             const password = form.password.value;
-            const resp = await SignInService(id, password);
+            const resp = await signInService(id, password);
 
             if (resp.status === 200) {
                 const auth = {
                     token: resp.data.token,
-                    id: id,
+                    userID: id,
+                    userName: "Usuário Name"
                 }
                 setToken(auth);
                 navigate("/");
@@ -48,7 +49,7 @@ const SignIn = () => {
     return (
         <div className="auth-wrapper">
 
-            <div className="auth-container col-11">
+            <div className="auth-container">
                 <Alert variant="danger" 
                     className="mb-2" 
                     show={ showError } 
@@ -68,6 +69,7 @@ const SignIn = () => {
                                 type="text" 
                                 placeholder="ID"
                                 name="id"
+                                autoFocus
                                 required />
                             <Form.Control.Feedback type="invalid">
                                 Informe seu ID.
@@ -90,7 +92,7 @@ const SignIn = () => {
                         </Form.Group>
 
                         <div className="d-grid gap-2">
-                            <Button variant="primary" size="lg" type="submit">
+                            <Button variant="success" size="lg" type="submit">
                                 Enviar
                             </Button>
                         </div>
