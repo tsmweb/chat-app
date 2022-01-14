@@ -18,7 +18,6 @@ export const getAllContactsService = async () => {
         }).then(res => {
             return res;
         }).catch(err => {
-            console.log("Error: " + err.response);
             return err.response;
         })
     );
@@ -35,7 +34,6 @@ export const getAllGroupsService = async () => {
         }).then(res => {
             return res;
         }).catch(err => {
-            console.log("Error: " + err.response);
             return err.response;
         })
     );

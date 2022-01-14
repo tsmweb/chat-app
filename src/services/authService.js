@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getToken } from "./token";
 
 const AUTH_SERVICE = "http://192.168.0.104:8081/v1";
 
@@ -23,11 +24,10 @@ export const signInService = async (id, password) => {
         }).then(res => {
             return res;
         }).catch(err => {
-            console.log("Error: " + err.response);
             return err.response;
         })
     );
-}
+};
 
 export const createAccountService = async (id, name, lastname, password) => {
     const user = {
@@ -48,8 +48,23 @@ export const createAccountService = async (id, name, lastname, password) => {
         }).then(res => {
             return res;
         }).catch(err => {
-            console.log("Error: " + err.response);
             return err.response;
         })
     );
-}
+};
+
+export const getUserService = async () => {
+    return (
+        http({
+            method: "GET",
+            url: "/user",
+            headers: {
+                Authorization: `${ getToken() }`
+            }
+        }).then(res => {
+            return res;
+        }).catch(err => {
+            return err.response;
+        })
+    );
+};

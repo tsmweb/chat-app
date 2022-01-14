@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-import { signInService } from "../services/authService";
-import { setToken } from "../services/token";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../contexts/auth";
 
 const SignIn = () => {
+    const { Login } = useAuth();
+
     const [validated, setValidated] = useState(false);
     const [messageError, setMessageError] = useState("");
     const [showError, setShowError] = useState(false);
@@ -19,24 +20,18 @@ const SignIn = () => {
         if (form.checkValidity() === true) {
             const id = form.id.value;
             const password = form.password.value;
-            const resp = await signInService(id, password);
 
-            if (resp.status === 200) {
-                const auth = {
-                    token: resp.data.token,
-                    userID: id,
-                    userName: "Usuário Name"
-                }
-                setToken(auth);
+            const status = await Login(id, password);
+            if (status === 200) {
                 navigate("/");
                 return;
             }
             
-            if (resp.status > 400) {
-                if (resp.status === 401) {
+            if (status > 400) {
+                if (status === 401) {
                     setMessageError("ID ou senha incorretos.");
                 } else {
-                    setMessageError(resp.data.error_message);
+                    setMessageError("Houve um erro no processo de login!");
                 }
                 
                 setShowError(true);
@@ -92,7 +87,7 @@ const SignIn = () => {
                         </Form.Group>
 
                         <div className="d-grid gap-2">
-                            <Button variant="success" size="lg" type="submit">
+                            <Button variant="primary" size="lg" type="submit">
                                 Enviar
                             </Button>
                         </div>

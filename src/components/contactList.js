@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { Form } from "react-bootstrap";
 import { PersonPlusFill, PeopleFill } from "react-bootstrap-icons";
 import { getAllContactsService, getAllGroupsService } from "../services/userService";
 import Avatar from "./avatar";
@@ -76,7 +77,7 @@ const ContactList = (props) => {
 
     return (
         <Fragment>
-            <div className="d-flex flex-column flex-shrink-0 p-0 bg-light h-100" style={{width: "380px"}}>
+            <div className="d-flex flex-column flex-shrink-0 p-0 bg-light h-100">
                 <div className="sidebar-header">
                     <div className="d-flex justify-content-between align-items-center">
                         <h5>Contatos</h5>
@@ -85,14 +86,14 @@ const ContactList = (props) => {
                         </span>
                     </div>
 
-                    <form>
-                        <input 
+                    <Form>
+                        <Form.Control 
                             type="text" 
-                            className="form-control" 
                             placeholder="Pesquisar..." 
+                            name="search"
                             aria-label="Pesquisar..." 
                             onChange={ handleSearchChange }/>
-                    </form>
+                    </Form>
                 </div>
 
                 <div className="list-group list-group-flush border-bottom scrollarea">
@@ -101,7 +102,7 @@ const ContactList = (props) => {
                         onClick={ handleNewContactClick }
                     >
                         <div className="w-100">
-                            <PersonPlusFill size={40} className="me-3" />
+                            <PersonPlusFill size={44} className="me-3" />
                             <strong>Novo contato</strong>
                         </div>
                     </a>
@@ -111,7 +112,7 @@ const ContactList = (props) => {
                         onClick={ handleNewGroupClick }
                     >
                         <div className="w-100">
-                            <PeopleFill size={40} className="me-3" />
+                            <PeopleFill size={44} className="me-3" />
                             <strong>Novo grupo</strong>
                         </div>
                     </a>
@@ -121,9 +122,9 @@ const ContactList = (props) => {
                         map(contact => (
                             <a href="#" 
                                 className="list-group-item list-group-item-action" 
-                                key={ contact.id } 
-                                onClick={ () => handleContactClick(contact) }
-                            >
+                                key={ contact.id }
+                                onClick={ () => handleContactClick(contact) }>
+
                                 <Avatar
                                     id={ contact.id } 
                                     name={ contact.name } 

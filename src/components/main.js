@@ -1,44 +1,59 @@
-import React, { Fragment, useState, useEffect } from "react";
-import { getToken, getUserID, clearLocalStorage } from "../services/token";
-import { useNavigate } from "react-router-dom";
-import { Container } from "react-bootstrap";
+import React, { Fragment } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { useAuth } from "../contexts/auth";
 
 import Header from "./header";
 import ContactList from "./contactList";
 
 const Home = () => {
-    const [collapsed, setCollapsed] = useState(false);
-    const [toggled, setToggled] = useState(false);
+    const { signed, user, Logout } = useAuth();
 
-    let navigate = useNavigate();
+    console.log(`Home: ${signed}`);
+    console.log(`Home: ${JSON.stringify(user)}`);
 
-    useEffect(() => {
-        const token = getToken();
-
-        if (token === null) {
-            navigate("/sign-in");
-        }
-    }, [])
-
-    const handleCollapsedChange = (checked) => {
-        setCollapsed(checked);
-    };
-
-    const handleToggleSidebar = (value) => {
-        setToggled(value);
-    };
-
-    const handleClick = (event) => {
-        clearLocalStorage();
-        navigate("/sign-in");
+    const handleLogoutClick = (event) => {
+        Logout();
     }
+
+    const handleEditMenuClick = (event) => {
+        alert("Edit Menu");
+    }
+
+    const menuSidebar = [
+        {
+            "title": "Editar",
+            "onAction": handleEditMenuClick
+        },
+        {
+            "title": "Sair",
+            "onAction": handleLogoutClick
+        }
+    ];
+
+    const handleHeaderClick = (contact) => {
+        alert(contact.name);
+    };
 
     return (
         <Fragment>
-            <Container fluid className="h-100 m-0 p-0">
-                <Header />
+            <Container className="h-100 m-auto p-0">
+                <Row className="m-0 p-0">
+                    <Col sm={4} className="p-0">
+                        <Header menu={ menuSidebar } profile={ user } onClick={ handleHeaderClick } />
+                    </Col>
+                    <Col sm={8} className="p-0">
+                        
+                    </Col>
+                </Row>
 
-                <ContactList />
+                <Row className="h-100 m-0 p-0">
+                    <Col sm={4} className="p-0">
+                        <ContactList />
+                    </Col>
+                    <Col sm={8} className="p-0">
+                        <p>Content R</p>
+                    </Col>
+                </Row>
             </Container>
         </Fragment>
     );

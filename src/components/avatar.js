@@ -7,7 +7,7 @@ const Avatar = (props) => {
 
     useEffect(async () => {
         await fetchImage();
-    }, []);
+    }, [props.id]);
 
     const fetchImage = async () => {
         let resp = undefined;

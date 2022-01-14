@@ -1,21 +1,11 @@
-export const setToken = (auth) => {
-    localStorage.setItem("token", auth.token);
-    localStorage.setItem("userID", auth.userID);
-    localStorage.setItem("userName", auth.userName);
-}
+export const setToken = (token) => {
+    sessionStorage.setItem("token", token);
+};
 
 export const getToken = () => {
-    return localStorage.getItem("token");
-}
+    return sessionStorage.getItem("token");
+};
 
-export const getUserID = () => {
-    return localStorage.getItem("userID");
-}
-
-export const getUserName = () => {
-    return localStorage.getItem("userName");
-}
-
-export const clearLocalStorage = () => {
-    return localStorage.clear();
-}
+export const clearSessionStorage = () => {
+    return sessionStorage.clear();
+};

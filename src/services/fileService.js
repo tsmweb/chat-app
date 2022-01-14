@@ -19,7 +19,6 @@ export const getUserPhotoService = async (userID) => {
         }).then(res => {
             return res;
         }).catch(err => {
-            console.log("Error: " + err.response);
             return err.response;
         })
     )
@@ -37,7 +36,6 @@ export const getGroupPhotoService = async (groupID) => {
         }).then(res => {
             return res;
         }).catch(err => {
-            console.log("Error: " + err.response);
             return err.response;
         })
     )
