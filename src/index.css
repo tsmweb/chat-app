@@ -99,22 +99,23 @@ body, html, .App, #root {
   text-decoration: underline;
 }
 
-.img-avatar {
-  width: 70px;
-  height: 70px;
-  border-radius: 35px;
-  overflow: hidden;
-  border-width: 3px;
-  border-color: #ffffff;
+.img-avatar-lg {
+  width: 160px;
+  height: 160px;
+  
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+ 
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  padding: 1px;
 }
 
-.img-avatar-list {
+.img-avatar-sm {
   width: 44px;
   height: 44px;
-  border-radius: 22px;
-  overflow: hidden;
-  border-width: 1px;
-  border-color: #ffffff;
+  border-radius: 50%;
 }
 
 .bi {

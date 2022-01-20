@@ -43,7 +43,6 @@ const SignIn = () => {
 
     return (
         <div className="auth-wrapper">
-
             <div className="auth-container">
                 <Alert variant="danger" 
                     className="mb-2" 

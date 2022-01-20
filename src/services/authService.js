@@ -19,7 +19,7 @@ export const signInService = async (id, password) => {
             url: "/login",
             data: login,
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json"
             }
         }).then(res => {
             return res;
@@ -43,7 +43,31 @@ export const createAccountService = async (id, name, lastname, password) => {
             url: "/user",
             data: user,
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json"
+            }
+        }).then(res => {
+            return res;
+        }).catch(err => {
+            return err.response;
+        })
+    );
+};
+
+export const updateUserService = async (id, name, lastname) => {
+    const user = {
+        id: id,
+        name: name,
+        lastname: lastname,
+    };
+
+    return (
+        http({
+            method: "PUT",
+            url: "/user",
+            data: user,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `${ getToken() }`
             }
         }).then(res => {
             return res;

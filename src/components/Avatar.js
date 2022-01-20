@@ -5,8 +5,10 @@ import imgAvatar from "../assets/img/avatar.png";
 const Avatar = (props) => {
     const [image, setImage] = useState(imgAvatar);
 
-    useEffect(async () => {
-        await fetchImage();
+    useEffect(() => {
+        (async () => {
+            await fetchImage();
+        })();
     }, [props.id]);
 
     const fetchImage = async () => {
@@ -36,7 +38,7 @@ const Avatar = (props) => {
 
     return (
         <div className="d-flex w-100 align-content-center">
-            <img src={ image } className="img-avatar-list me-3"/>
+            <img src={ image } className="img-avatar-sm me-3"/>
             <div className="d-flex flex-column">
                 <strong>{ props.name }</strong>
                 <small>{ props.description }</small>

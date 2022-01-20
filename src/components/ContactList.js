@@ -1,16 +1,28 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Form } from "react-bootstrap";
 import { PersonPlusFill, PeopleFill } from "react-bootstrap-icons";
 import { getAllContactsService, getAllGroupsService } from "../services/userService";
-import Avatar from "./avatar";
+import ModalScreen from "./ModalScreen";
+import ContactForm from "./ContactForm";
+import GroupForm from "./GroupForm";
+import Avatar from "./Avatar";
 
 const ContactList = (props) => {
     const [contacts, setContacts] = useState([]);
     const [search, setSearch] = useState("");
 
-    useEffect(async () => {
-        const resp = await fetchContacts();
-        setContacts(resp);
+    const [showModal, setShowModal] = useState(false);
+    const [fullscreenModal, setFullscreenModal] = useState(false);
+    const [form, setForm] = useState({
+        "title": "",
+        "content": null
+    });
+
+    useEffect(() => {
+        (async () => {
+            const resp = await fetchContacts();
+            setContacts(resp);
+        })();
     }, []);
 
     const fetchContacts = async () => {
@@ -55,15 +67,26 @@ const ContactList = (props) => {
     };
 
     const handleNewContactClick = (event) => {
-        alert("Novo contato!");
+        event.preventDefault();
+        setForm({
+            "title": "Novo contato",
+            "content": <ContactForm/>
+        });
+        setShowModal(true);
     };
 
     const handleNewGroupClick = (event) => {
-        alert("Novo grupo!");
+        event.preventDefault();
+        setForm({
+            "title": "Novo grupo",
+            "content": <GroupForm/>
+        });
+        setShowModal(true);
     };
 
-    const handleContactClick = (contact) => {
-        alert(`${contact.isGroup} - ${contact.id} `);
+    const handleContactClick = (event, contact) => {
+        event.preventDefault();
+        props.onContactClick(contact);
     };
 
     const handleSearchChange = (event) => {
@@ -76,8 +99,8 @@ const ContactList = (props) => {
     };
 
     return (
-        <Fragment>
-            <div className="d-flex flex-column flex-shrink-0 p-0 bg-light h-100">
+        <>
+            <div className="d-flex flex-column flex-shrink-0 p-0 bg-light">
                 <div className="sidebar-header">
                     <div className="d-flex justify-content-between align-items-center">
                         <h5>Contatos</h5>
@@ -123,7 +146,7 @@ const ContactList = (props) => {
                             <a href="#" 
                                 className="list-group-item list-group-item-action" 
                                 key={ contact.id }
-                                onClick={ () => handleContactClick(contact) }>
+                                onClick={ (event) => handleContactClick(event, contact) }>
 
                                 <Avatar
                                     id={ contact.id } 
@@ -134,7 +157,16 @@ const ContactList = (props) => {
                     ))}
                 </div>
             </div>
-        </Fragment>
+
+            <ModalScreen 
+                show={ showModal }
+                onHide={ () => setShowModal(false) }
+                fullscreen={ fullscreenModal }
+                title={ form.title }>
+
+                { form.content }
+            </ModalScreen>
+        </>
     );
 };
 
