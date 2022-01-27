@@ -15,9 +15,9 @@ const ModalScreen = (props) => {
             <Modal.Header 
                 closeButton 
                 closeVariant="white"
-                className="text-light bg-black"
+                className="text-light bg-black p-2 border-0"
             >
-                <Modal.Title>
+                <Modal.Title className="fs-6">
                     { props.title }
                 </Modal.Title>
             </Modal.Header>

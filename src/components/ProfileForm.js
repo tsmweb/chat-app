@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Alert, Container, Toast } from "react-bootstrap";
+import { Form, Button, Alert, Container } from "react-bootstrap";
+import RoundImage from "./RoundImage";
 import { useAuth } from "../contexts/auth";
 import { getUserPhotoService } from "../services/fileService";
 import { getUserService, updateUserService } from "../services/authService";
@@ -95,7 +96,12 @@ const ProfileForm = (props) => {
                 { messageAlert }
             </Alert>
 
-            <img src={ image } className="img-avatar-lg"/>
+            <RoundImage 
+                src={ image } 
+                size={ 160 } 
+                title={ `${name} ${lastname}` }
+                readOnly={ false } 
+                className="m-auto" />
 
             <Form noValidate validated={ validated } onSubmit={ handleSubmit }>
                 <Form.Group className="mb-3" controlId="formID">

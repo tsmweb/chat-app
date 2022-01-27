@@ -84,8 +84,7 @@ const ContactList = (props) => {
         setShowModal(true);
     };
 
-    const handleContactClick = (event, contact) => {
-        event.preventDefault();
+    const handleContactClick = (contact) => {
         props.onContactClick(contact);
     };
 
@@ -143,17 +142,14 @@ const ContactList = (props) => {
                     { contacts.
                         filter(filterContacts).
                         map(contact => (
-                            <a href="#" 
-                                className="list-group-item list-group-item-action" 
-                                key={ contact.id }
-                                onClick={ (event) => handleContactClick(event, contact) }>
-
+                            <div key={ contact.id } className="list-group-item list-group-item-action">
                                 <Avatar
                                     id={ contact.id } 
                                     name={ contact.name } 
                                     description={ contact.description }
-                                    isGroup={ contact.isGroup } />
-                            </a>
+                                    isGroup={ contact.isGroup }
+                                    onClick={ () => handleContactClick(contact) } />
+                            </div>
                     ))}
                 </div>
             </div>

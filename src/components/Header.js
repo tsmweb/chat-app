@@ -11,13 +11,13 @@ const Header = (props) => {
                 <Navbar.Brand 
                     href="#"
                     className="fs-6 p-0"
-                    onClick={ () => props.onClick(props.profile) }>
-
+                >
                     <Avatar
                         id={ props.profile.id } 
                         name={ props.profile.name } 
                         description={ props.profile.description }
-                        isGroup={ props.profile.isGroup === undefined ? false : props.profile.isGroup } />
+                        isGroup={ props.profile.isGroup === undefined ? false : props.profile.isGroup }
+                        onClick={ () => props.onClick(props.profile) } />
                 </Navbar.Brand>
 
                 <Navbar.Text>

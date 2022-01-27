@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getUserPhotoService, getGroupPhotoService } from "../services/fileService";
 import imgAvatar from "../assets/img/avatar.png";
+import RoundImage from "./RoundImage";
 
 const Avatar = (props) => {
     const [image, setImage] = useState(imgAvatar);
@@ -38,8 +39,17 @@ const Avatar = (props) => {
 
     return (
         <div className="d-flex w-100 align-content-center">
-            <img src={ image } className="img-avatar-sm me-3"/>
-            <div className="d-flex flex-column">
+            <RoundImage 
+                src={ image } 
+                size={ 44 } 
+                title={ props.name }
+                readOnly={ true }
+                className="me-3" />
+
+            <div className="d-flex flex-column"
+                onClick={ props.onClick }
+                role="button"
+            >
                 <strong>{ props.name }</strong>
                 <small>{ props.description }</small>
             </div>
