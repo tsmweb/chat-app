@@ -8,6 +8,7 @@ const RoundImage = (props) => {
     const [show, setShow] = useState(false);
     const [showImage, setShowImage] = useState(false);
     const target = useRef(null);
+    const inputImageRef = useRef(null);
 
     const handleClick = (event) => {
         if (props.readOnly) {
@@ -24,6 +25,11 @@ const RoundImage = (props) => {
 
     const handleLoadImageClick = () => {
         hideMenu();
+        inputImageRef.current.click();
+    };
+
+    const handleFileChange = (event) => {
+        props.onChange(event.target.files[0]);
     };
 
     const showMenu = () => {
@@ -68,7 +74,13 @@ const RoundImage = (props) => {
                     <div ref={ target }>
                         <CameraFill size={ 32 } color="white" />  
                     </div>
-                </div>     
+                </div>   
+
+                <input type="file" 
+                    ref={ inputImageRef }
+                    accept="image/jpeg" 
+                    style={{display: "none"}}
+                    onChange={ handleFileChange } />  
             </div>
    
             <Overlay

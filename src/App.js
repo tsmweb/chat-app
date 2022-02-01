@@ -7,7 +7,7 @@ import './App.css';
 import { AuthProvider, RequireAuth } from "./contexts/auth";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
-import Home from "./components/Home";
+import Main from "./components/Main";
 
 function App() {
   return ( 
@@ -18,7 +18,7 @@ function App() {
           <Route path="/sign-up" element={ <SignUp/> } />
           <Route path="/" element={ 
             <RequireAuth>
-              <Home/> 
+              <Main/> 
             </RequireAuth>
           } />
         </Routes>

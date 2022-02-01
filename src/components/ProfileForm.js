@@ -2,18 +2,19 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Alert, Container } from "react-bootstrap";
 import RoundImage from "./RoundImage";
 import { useAuth } from "../contexts/auth";
-import { getUserPhotoService } from "../services/fileService";
+import { getUserPhotoService, uploadUserPhotoService } from "../services/fileService";
 import { getUserService, updateUserService } from "../services/authService";
+import { useHttpRespImage } from "../hooks/hooks";
 import imgAvatar from "../assets/img/avatar.png";
 
 const ProfileForm = (props) => {
     const { user, Refresh } = useAuth();
-    const [image, setImage] = useState(imgAvatar);
     const [name, setName] = useState("");
     const [lastname, setLastname] = useState("");
     const [validated, setValidated] = useState(false);
     const [messageAlert, setMessageAlert] = useState("");
     const [showAlert, setShowAlert] = useState(false);
+    const { image, loadImage } = useHttpRespImage(imgAvatar);
 
     useEffect(() => {
         (async () => {
@@ -25,19 +26,6 @@ const ProfileForm = (props) => {
     const fetchImage = async () => {
         const resp = await getUserPhotoService(user.id);
         loadImage(resp);
-    };
-
-    const loadImage = (resp) => {
-        if (resp.status === 200) {
-            const reader = new FileReader();
-            reader.readAsDataURL(resp.data);
-            reader.onload = () => {
-                const base64data = reader.result;
-                setImage(base64data);
-            };
-        } else {
-            setImage(imgAvatar);
-        }
     };
 
     const fetchData = async () => {
@@ -61,6 +49,17 @@ const ProfileForm = (props) => {
             case "lastname":
                 setLastname(value);
                 break;    
+        }
+    };
+
+    const handleRoundImageChange = async (file) => {
+        const resp = await uploadUserPhotoService(file);
+        if (resp.status === 201) {
+            await fetchImage();
+            Refresh();
+        } else {
+            setMessageAlert(resp.data.error_message);
+            setShowAlert(true);
         }
     };
 
@@ -101,6 +100,7 @@ const ProfileForm = (props) => {
                 size={ 160 } 
                 title={ `${name} ${lastname}` }
                 readOnly={ false } 
+                onChange={ handleRoundImageChange }
                 className="m-auto" />
 
             <Form noValidate validated={ validated } onSubmit={ handleSubmit }>

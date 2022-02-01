@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useHttpRespImage } from "../hooks/hooks";
 import { getUserPhotoService, getGroupPhotoService } from "../services/fileService";
-import imgAvatar from "../assets/img/avatar.png";
 import RoundImage from "./RoundImage";
+import imgAvatar from "../assets/img/avatar.png";
 
 const Avatar = (props) => {
-    const [image, setImage] = useState(imgAvatar);
+    
+    const { image, loadImage } = useHttpRespImage(imgAvatar);
 
     useEffect(() => {
         (async () => {
@@ -24,19 +26,6 @@ const Avatar = (props) => {
         loadImage(resp);
     };
 
-    const loadImage = (resp) => {
-        if (resp.status === 200) {
-            const reader = new FileReader();
-            reader.readAsDataURL(resp.data);
-            reader.onload = () => {
-                const base64data = reader.result;
-                setImage(base64data);
-            };
-        } else {
-            setImage(imgAvatar);
-        }
-    };
-
     return (
         <div className="d-flex w-100 align-content-center">
             <RoundImage 
@@ -44,9 +33,9 @@ const Avatar = (props) => {
                 size={ 44 } 
                 title={ props.name }
                 readOnly={ true }
-                className="me-3" />
+                className="me-2 flex-shrink-0" />
 
-            <div className="d-flex flex-column"
+            <div className="d-flex flex-column w-100"
                 onClick={ props.onClick }
                 role="button"
             >

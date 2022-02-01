@@ -9,15 +9,7 @@ const Sidebar = (props) => {
     const { user, Logout } = useAuth();
     const [openProfileForm, setOpenProfileForm] = useState(false);
 
-    const handleEditMenuClick = (event) => {
-        alert("Edit Menu");
-    }
-
     const menu = [
-        {
-            "title": "Editar",
-            "onAction": handleEditMenuClick
-        },
         {
             "title": "Sair",
             "onAction": Logout
@@ -28,10 +20,6 @@ const Sidebar = (props) => {
         setOpenProfileForm(true);
     };
 
-    const handleContactClick = (contact) => {
-        alert(contact.id);
-    };
-
     return (
         <>
             <div className="h-100 bg-white">
@@ -40,8 +28,7 @@ const Sidebar = (props) => {
                     profile={ user } 
                     onClick={ handleHeaderClick } />
 
-                <ContactList
-                    onContactClick={ handleContactClick } />
+                <ContactList />
             </div>
 
             <ModalScreen 

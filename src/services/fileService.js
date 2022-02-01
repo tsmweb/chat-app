@@ -24,6 +24,27 @@ export const getUserPhotoService = async (userID) => {
     )
 };
 
+export const uploadUserPhotoService = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return (
+        http({
+            method: "POST",
+            url: `/user`,
+            data: formData,
+            headers: {
+                Authorization: `${ getToken() }`,
+                "Content-Type": "multipart/form-data"
+            },
+        }).then(res => {
+            return res;
+        }).catch(err => {
+            return err.response;
+        })
+    )
+};
+
 export const getGroupPhotoService = async (groupID) => {
     return (
         http({

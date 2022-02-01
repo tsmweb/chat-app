@@ -38,3 +38,46 @@ export const getAllGroupsService = async () => {
         })
     );
 };
+
+export const fetchContactsService = async () => {
+    let contacts = [];
+    let groups = [];
+
+    const respContact = await getAllContactsService();
+    if (respContact.status === 200) {
+        contacts = respContact.data.map(contact => {
+            return {
+                "id": contact.id,
+                "name": `${contact.name} ${contact.lastname}`,
+                "lastMessage": contact.id,
+                "updatedAt": Date.now(),
+                "isGroup": false
+            }
+        });
+
+        const respGroup = await getAllGroupsService();
+        if (respGroup.status === 200) {
+            groups = respGroup.data.map(group => {
+                return {
+                    "id": group.id,
+                    "name": group.name,
+                    "lastMessage": group.description,
+                    "updatedAt": Date.now(),
+                    "isGroup": true
+                }
+            });
+        }
+    }
+
+    return contacts.
+            concat(groups).
+            sort((c1, c2) => {
+                if (c1.name < c2.name) {
+                    return -1;
+                }
+                if (c1.name > c2.name) {
+                    return 1;
+                }
+                return 0;
+            });
+};
