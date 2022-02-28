@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { createAccountService } from "../services/authService";
+import * as authService from "../services/authService";
  
 const SignUp = () => {
     const [validated, setValidated] = useState(false);
@@ -21,7 +21,7 @@ const SignUp = () => {
             const name = form.name.value;
             const lastname = form.lastname.value;
             const password = form.password.value;
-            const resp = await createAccountService(id, name, lastname, password);
+            const resp = await authService.createAccount(id, name, lastname, password);
 
             if (resp.status === 201) {
                 setMessageAlert("Conta criada com sucesso!");

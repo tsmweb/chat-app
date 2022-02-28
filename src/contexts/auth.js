@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { Navigate } from "react-router-dom";
-import { signInService, getUserService } from "../services/authService";
+import { Navigate, useLocation } from "react-router-dom";
+import * as authService from "../services/authService";
 import { setToken, clearSessionStorage } from "../services/token";
 
 const AuthContext = createContext({
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const Login = async (id, password) => {
-        const resp = await signInService(id, password);
+        const resp = await authService.signIn(id, password);
         if (resp.status === 200) {
             setToken(resp.data.token);
 
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const Refresh = async () => {
-        const resp = await getUserService();
+        const resp = await authService.getUser();
         if (resp.status === 200) {
             const profile = {
                 "id": resp.data.id,
@@ -73,9 +73,10 @@ export function useAuth() {
 
 export const RequireAuth = ({ children }) => {
     let auth = useAuth();
+    let location = useLocation();
 
     if (!auth.signed) {
-        return <Navigate to="/sign-in" replace />;
+        return <Navigate to="/sign-in" state={{ from: location }} replace />;
     }
 
     return children;

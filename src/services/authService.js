@@ -1,13 +1,12 @@
 import axios from "axios";
+import * as config from "../config/config";
 import { getToken } from "./token";
 
-const AUTH_SERVICE = "http://192.168.0.104:8081/v1";
-
 const http = axios.create({
-    baseURL: AUTH_SERVICE,
+    baseURL: config.AUTH_SERVICE,
 });
 
-export const signInService = async (id, password) => {
+export const signIn = async (id, password) => {
     const login = {
         id: id,
         password: password
@@ -29,7 +28,7 @@ export const signInService = async (id, password) => {
     );
 };
 
-export const createAccountService = async (id, name, lastname, password) => {
+export const createAccount = async (id, name, lastname, password) => {
     const user = {
         id: id,
         name: name,
@@ -53,7 +52,7 @@ export const createAccountService = async (id, name, lastname, password) => {
     );
 };
 
-export const updateUserService = async (id, name, lastname) => {
+export const updateUser = async (id, name, lastname) => {
     const user = {
         id: id,
         name: name,
@@ -67,7 +66,7 @@ export const updateUserService = async (id, name, lastname) => {
             data: user,
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `${ getToken() }`
+                Authorization: `Bearer ${ getToken() }`
             }
         }).then(res => {
             return res;
@@ -77,13 +76,13 @@ export const updateUserService = async (id, name, lastname) => {
     );
 };
 
-export const getUserService = async () => {
+export const getUser = async () => {
     return (
         http({
             method: "GET",
             url: "/user",
             headers: {
-                Authorization: `${ getToken() }`
+                Authorization: `Bearer ${ getToken() }`
             }
         }).then(res => {
             return res;

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import { Overlay, Popover, ListGroup } from "react-bootstrap";
 import { ThreeDotsVertical } from "react-bootstrap-icons";
 
@@ -17,7 +17,7 @@ const Menu = (props) => {
     };
 
     return (
-        <Fragment>
+        <>
             <a href="#" onClick={ handleClick }>
                 <ThreeDotsVertical size={22} />
             </a>
@@ -39,7 +39,7 @@ const Menu = (props) => {
                     </Popover.Body>
                 </Popover>
             </Overlay>
-        </Fragment>
+        </>
     );
 };
 

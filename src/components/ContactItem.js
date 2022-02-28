@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import Moment from "react-moment";
 import RoundImage from "./RoundImage";
-import { getUserPhotoService, getGroupPhotoService } from "../services/fileService";
+import * as fileService from "../services/fileService";
 import { useHttpRespImage } from "../hooks/hooks";
 import { useContacts } from "../contexts/data";
 import imgAvatar from "../assets/img/avatar.png";
@@ -15,15 +15,15 @@ const ContactItem = (props) => {
         (async () => {
             await fetchImage();
         })();
-    }, [contact.id]);
+    }, [contact]);
 
     const fetchImage = async () => {
         let resp = undefined;
 
         if (contact.isGroup) {
-            resp = await getGroupPhotoService(contact.id);
+            resp = await fileService.getGroupPhoto(contact.id);
         } else {
-            resp = await getUserPhotoService(contact.id);
+            resp = await fileService.getUserPhoto(contact.id);
         }
 
         loadImage(resp);

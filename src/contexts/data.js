@@ -1,11 +1,11 @@
 import { createContext, useState, useEffect, useContext } from "react";
-import { fetchContactsService } from "../services/userService";
+import * as userService from "../services/userService";
 
 const ContactsContext = createContext();
 
 export const ContactsProvider = ({ children }) => {
     const [contacts, setContacts] = useState([]);
-    const [selectedContact, setSelectedContact] = useState({});
+    const [selectedContact, setSelectedContact] = useState(null);
 
     useEffect(() => {
         (async () => {
@@ -14,8 +14,12 @@ export const ContactsProvider = ({ children }) => {
     }, []);
 
     const LoadContacts = async () => {
-        const resp = await fetchContactsService();
+        const resp = await userService.fetchContacts();
         setContacts(resp);
+        
+        if (resp.length > 0) {
+            setSelectedContact(resp[0]);
+        }
     };
 
     const UpdateContact = (contact) => {

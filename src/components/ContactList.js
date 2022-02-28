@@ -11,7 +11,6 @@ const ContactList = (props) => {
     const { contacts } = useContacts();
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
-    const [fullscreenModal, setFullscreenModal] = useState(false);
     const [form, setForm] = useState({
         "title": "",
         "content": null
@@ -101,7 +100,6 @@ const ContactList = (props) => {
             <ModalScreen 
                 show={ showModal }
                 onHide={ () => setShowModal(false) }
-                fullscreen={ fullscreenModal }
                 title={ form.title }>
 
                 { form.content }

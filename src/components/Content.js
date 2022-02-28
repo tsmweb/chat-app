@@ -6,7 +6,7 @@ import ModalScreen from "./ModalScreen";
 
 const Content = (props) => {
     const { selectedContact } = useContacts();
-    const [profile, setProfile] = useState({});
+    const [profile, setProfile] = useState(null);
     const [openContactForm, setOpenContactForm] = useState(false);
 
     const menu = [
@@ -17,6 +17,10 @@ const Content = (props) => {
     ];
 
     useEffect(() => {
+        if (selectedContact === null) {
+            return
+        }
+        
         const updateAt = moment(selectedContact.updatedAt).format("hh:mm");
         const prof = {
             "id": selectedContact.id,
@@ -25,7 +29,7 @@ const Content = (props) => {
             "description": `visto por último hoje às ${updateAt}`
         }
         setProfile(prof);
-    }, [selectedContact.id])
+    }, [selectedContact])
 
     const handleHeaderClick = (contact) => {
         setOpenContactForm(true);

@@ -23,7 +23,7 @@ const SignIn = () => {
 
             const status = await Login(id, password);
             if (status === 200) {
-                navigate("/");
+                navigate("/", { replace: true });
                 return;
             }
             
@@ -87,7 +87,7 @@ const SignIn = () => {
 
                         <div className="d-grid gap-2">
                             <Button variant="primary" size="lg" type="submit">
-                                Enviar
+                                Entrar
                             </Button>
                         </div>
 

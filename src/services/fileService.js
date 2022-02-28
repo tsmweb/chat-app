@@ -1,19 +1,18 @@
 import axios from "axios";
+import * as config from "../config/config";
 import { getToken } from "./token";
 
-const FILE_SERVICE = "http://192.168.0.104:8083/v1";
-
 const http = axios.create({
-    baseURL: FILE_SERVICE,
+    baseURL: config.FILE_SERVICE,
 });
 
-export const getUserPhotoService = async (userID) => {
+export const getUserPhoto = async (userID) => {
     return (
         http({
             method: "GET",
             url: `/user/${userID}`,
             headers: {
-                Authorization: `${ getToken() }`
+                Authorization: `Bearer ${ getToken() }`
             },
             responseType: "blob"
         }).then(res => {
@@ -24,7 +23,7 @@ export const getUserPhotoService = async (userID) => {
     )
 };
 
-export const uploadUserPhotoService = async (file) => {
+export const uploadUserPhoto = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
 
@@ -34,7 +33,7 @@ export const uploadUserPhotoService = async (file) => {
             url: `/user`,
             data: formData,
             headers: {
-                Authorization: `${ getToken() }`,
+                Authorization: `Bearer ${ getToken() }`,
                 "Content-Type": "multipart/form-data"
             },
         }).then(res => {
@@ -45,13 +44,13 @@ export const uploadUserPhotoService = async (file) => {
     )
 };
 
-export const getGroupPhotoService = async (groupID) => {
+export const getGroupPhoto = async (groupID) => {
     return (
         http({
             method: "GET",
             url: `/group/${groupID}`,
             headers: {
-                Authorization: `${ getToken() }`
+                Authorization: `Bearer ${ getToken() }`
             },
             responseType: "blob"
         }).then(res => {

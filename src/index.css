@@ -103,6 +103,10 @@ body, html, .App, #root {
   vertical-align: -.125em;
 }
 
+.header-height {
+  height: 45px !important;
+}
+
 .sidebar-header {
   background-color: #ebebeb;
   padding: 0.5rem;

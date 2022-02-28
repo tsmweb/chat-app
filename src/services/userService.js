@@ -1,19 +1,18 @@
 import axios from "axios";
+import * as config from "../config/config";
 import { getToken } from "./token";
 
-const USER_SERVICE = "http://192.168.0.104:8082/v1";
-
 const http = axios.create({
-    baseURL: USER_SERVICE,
+    baseURL: config.USER_SERVICE,
 });
 
-export const getAllContactsService = async () => {
+export const getAllContacts = async () => {
     return (
         http({
             method: "GET",
             url: "/contact",
             headers: {
-                Authorization: `${ getToken() }`
+                Authorization: `Bearer ${ getToken() }`
             }
         }).then(res => {
             return res;
@@ -23,13 +22,13 @@ export const getAllContactsService = async () => {
     );
 };
 
-export const getAllGroupsService = async () => {
+export const getAllGroups = async () => {
     return (
         http({
             method: "GET",
             url: "/group",
             headers: {
-                Authorization: `${ getToken() }`
+                Authorization: `Bearer ${ getToken() }`
             }
         }).then(res => {
             return res;
@@ -39,11 +38,11 @@ export const getAllGroupsService = async () => {
     );
 };
 
-export const fetchContactsService = async () => {
+export const fetchContacts = async () => {
     let contacts = [];
     let groups = [];
 
-    const respContact = await getAllContactsService();
+    const respContact = await getAllContacts();
     if (respContact.status === 200) {
         contacts = respContact.data.map(contact => {
             return {
@@ -55,7 +54,7 @@ export const fetchContactsService = async () => {
             }
         });
 
-        const respGroup = await getAllGroupsService();
+        const respGroup = await getAllGroups();
         if (respGroup.status === 200) {
             groups = respGroup.data.map(group => {
                 return {

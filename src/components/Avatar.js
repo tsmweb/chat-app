@@ -1,26 +1,30 @@
 import React, { useEffect } from "react";
 import { useHttpRespImage } from "../hooks/hooks";
-import { getUserPhotoService, getGroupPhotoService } from "../services/fileService";
+import * as fileService from "../services/fileService";
 import RoundImage from "./RoundImage";
 import imgAvatar from "../assets/img/avatar.png";
 
 const Avatar = (props) => {
-    
     const { image, loadImage } = useHttpRespImage(imgAvatar);
 
     useEffect(() => {
         (async () => {
             await fetchImage();
         })();
+        // eslint-disable-next-line
     }, [props.id]);
 
     const fetchImage = async () => {
+        if (props.id === undefined) {
+            return
+        }
+
         let resp = undefined;
 
         if (props.isGroup) {
-            resp = await getGroupPhotoService(props.id);
+            resp = await fileService.getGroupPhoto(props.id);
         } else {
-            resp = await getUserPhotoService(props.id);
+            resp = await fileService.getUserPhoto(props.id);
         }
 
         loadImage(resp);

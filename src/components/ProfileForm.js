@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Alert, Container } from "react-bootstrap";
 import RoundImage from "./RoundImage";
 import { useAuth } from "../contexts/auth";
-import { getUserPhotoService, uploadUserPhotoService } from "../services/fileService";
-import { getUserService, updateUserService } from "../services/authService";
+import * as fileService from "../services/fileService";
+import * as authService from "../services/authService";
 import { useHttpRespImage } from "../hooks/hooks";
 import imgAvatar from "../assets/img/avatar.png";
 
@@ -24,12 +24,12 @@ const ProfileForm = (props) => {
     }, [user.id]);
 
     const fetchImage = async () => {
-        const resp = await getUserPhotoService(user.id);
+        const resp = await fileService.getUserPhoto(user.id);
         loadImage(resp);
     };
 
     const fetchData = async () => {
-        const resp = await getUserService();
+        const resp = await authService.getUser();
         if (resp.status === 200) {
             setName(resp.data.name);
             setLastname(resp.data.lastname);
@@ -53,7 +53,7 @@ const ProfileForm = (props) => {
     };
 
     const handleRoundImageChange = async (file) => {
-        const resp = await uploadUserPhotoService(file);
+        const resp = await fileService.uploadUserPhoto(file);
         if (resp.status === 201) {
             await fetchImage();
             Refresh();
@@ -70,7 +70,7 @@ const ProfileForm = (props) => {
         event.stopPropagation();
 
         if (form.checkValidity() === true) {
-            const resp = await updateUserService(user.id, name, lastname);
+            const resp = await authService.updateUser(user.id, name, lastname);
             if (resp.status === 200) {
                 Refresh();
                 props.onHide();

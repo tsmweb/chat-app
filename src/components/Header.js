@@ -7,17 +7,19 @@ const Header = (props) => {
 
     return (
         <Navbar bg="dark" variant="dark">
-            <Container fluid>
+            <Container fluid className="header-height">
                 <Navbar.Brand 
                     href="#"
                     className="fs-6 p-0"
                 >
+                    {props.profile &&
                     <Avatar
                         id={ props.profile.id } 
                         name={ props.profile.name } 
                         description={ props.profile.description }
                         isGroup={ props.profile.isGroup === undefined ? false : props.profile.isGroup }
                         onClick={ () => props.onClick(props.profile) } />
+                    }
                 </Navbar.Brand>
 
                 <Navbar.Text>
