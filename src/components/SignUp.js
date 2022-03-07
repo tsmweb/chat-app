@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import * as authService from "../services/authService";
+import * as authService from "../services/auth";
  
 const SignUp = () => {
     const [validated, setValidated] = useState(false);
@@ -27,7 +27,6 @@ const SignUp = () => {
                 setMessageAlert("Conta criada com sucesso!");
                 setVariantAlert("success");
                 form.reset();
-                return;
             } else {
                 if (resp.status === 409) {
                     setMessageAlert("Usuário já inscrito!");
@@ -68,10 +67,10 @@ const SignUp = () => {
                         <h3>Inscrever-se</h3>
 
                         <Form.Group className="mb-3" controlId="formID">
-                            <Form.Label>ID</Form.Label>
+                            <Form.Label>Telefone</Form.Label>
                             <Form.Control 
                                 type="text" 
-                                placeholder="ID"
+                                placeholder="Telefone"
                                 name="id"
                                 autoFocus
                                 required />
@@ -96,12 +95,8 @@ const SignUp = () => {
                             <Form.Label>Sobrenome</Form.Label>
                             <Form.Control  
                                 type="text" 
-                                placeholder="Sobrenome"
-                                name="lastname"
-                                required />
-                            <Form.Control.Feedback type="invalid">
-                                Informe seu sobrenome.
-                            </Form.Control.Feedback> 
+                                placeholder="Sobrenome (opcional)"
+                                name="lastname" />
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formPassword">

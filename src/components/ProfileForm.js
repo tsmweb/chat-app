@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Alert, Container } from "react-bootstrap";
 import RoundImage from "./RoundImage";
 import { useAuth } from "../contexts/auth";
-import * as fileService from "../services/fileService";
-import * as authService from "../services/authService";
+import * as fileService from "../services/file";
+import * as authService from "../services/auth";
 import { useHttpRespImage } from "../hooks/hooks";
 import imgAvatar from "../assets/img/avatar.png";
 
@@ -21,6 +21,7 @@ const ProfileForm = (props) => {
             await fetchImage();
             await fetchData();
         })();
+        // eslint-disable-next-line
     }, [user.id]);
 
     const fetchImage = async () => {
@@ -48,7 +49,9 @@ const ProfileForm = (props) => {
                 break;
             case "lastname":
                 setLastname(value);
-                break;    
+                break; 
+            default:
+                return;       
         }
     };
 

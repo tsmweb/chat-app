@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./assets/font-awesome/css/font-awesome.min.css"
 import './App.css';
 
 import { AuthProvider, RequireAuth } from "./contexts/auth";

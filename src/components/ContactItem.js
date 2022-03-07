@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import Moment from "react-moment";
 import RoundImage from "./RoundImage";
-import * as fileService from "../services/fileService";
+import * as fileService from "../services/file";
 import { useHttpRespImage } from "../hooks/hooks";
-import { useContacts } from "../contexts/data";
+import { useContacts } from "../contexts/contact";
 import imgAvatar from "../assets/img/avatar.png";
 
 const ContactItem = (props) => {
@@ -15,6 +15,7 @@ const ContactItem = (props) => {
         (async () => {
             await fetchImage();
         })();
+        // eslint-disable-next-line
     }, [contact]);
 
     const fetchImage = async () => {
@@ -57,9 +58,17 @@ const ContactItem = (props) => {
                     </small>
                 </div>
                 
-                <small>
-                    { contact.lastMessage }
-                </small>
+                <div className="d-flex justify-content-between">
+                    <small>
+                        { contact.lastMessage }
+                    </small>
+                    
+                    { contact.unreadMessages > 0 &&
+                    <span className="badge bg-primary rounded-pill">
+                        { contact.unreadMessages }
+                    </span>
+                    }
+                </div>
             </div>
         </div>
     );

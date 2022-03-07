@@ -112,6 +112,7 @@ const RoundImage = (props) => {
                 title={ props.title }
             >
                 <img src={ props.src } 
+                    alt={ props.title }
                     style={{ 
                         width: "100%", 
                         height: "100%", 

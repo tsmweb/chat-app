@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import * as authService from "../services/authService";
+import * as authService from "../services/auth";
 import { setToken, clearSessionStorage } from "../services/token";
 
 const AuthContext = createContext({

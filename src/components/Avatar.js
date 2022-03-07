@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useHttpRespImage } from "../hooks/hooks";
-import * as fileService from "../services/fileService";
+import * as fileService from "../services/file";
 import RoundImage from "./RoundImage";
 import imgAvatar from "../assets/img/avatar.png";
 

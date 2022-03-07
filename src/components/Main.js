@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { ContactsProvider, useContacts } from "../contexts/data";
+import { ContactsProvider } from "../contexts/contact";
 import Content from "./Content";
 import Sidebar from "./Sidebar";
 

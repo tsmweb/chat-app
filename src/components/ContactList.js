@@ -5,7 +5,7 @@ import ModalScreen from "./ModalScreen";
 import ContactForm from "./ContactForm";
 import GroupForm from "./GroupForm";
 import ContactItem from "./ContactItem";
-import { useContacts } from "../contexts/data";
+import { useContacts } from "../contexts/contact";
 
 const ContactList = (props) => {
     const { contacts } = useContacts();
@@ -19,7 +19,7 @@ const ContactList = (props) => {
     const handleNewContactClick = (event) => {
         event.preventDefault();
         setForm({
-            "title": "Novo contato",
+            "title": "Adicionar Contato",
             "content": <ContactForm/>
         });
         setShowModal(true);
@@ -28,7 +28,7 @@ const ContactList = (props) => {
     const handleNewGroupClick = (event) => {
         event.preventDefault();
         setForm({
-            "title": "Novo grupo",
+            "title": "Novo Grupo",
             "content": <GroupForm/>
         });
         setShowModal(true);
@@ -71,7 +71,7 @@ const ContactList = (props) => {
                     >
                         <div className="w-100">
                             <PersonPlus size={36} className="me-3" />
-                            <strong>Novo contato</strong>
+                            <strong>Adicionar Contato</strong>
                         </div>
                     </a>
 
@@ -81,18 +81,16 @@ const ContactList = (props) => {
                     >
                         <div className="w-100">
                             <People size={36} className="me-3" />
-                            <strong>Novo grupo</strong>
+                            <strong>Novo Grupo</strong>
                         </div>
                     </a>
 
-                    { contacts.
-                        filter(filterContacts).
-                        map(contact => (
-                            <div key={ contact.id } className="list-group-item list-group-item-action">
-                                <ContactItem
-                                    contact={ contact }
-                                    onClick={ () => props.onContactClick(contact) } />
-                            </div>
+                    { contacts.filter(filterContacts).map(contact => (
+                        <div key={ contact.id } className="list-group-item list-group-item-action">
+                            <ContactItem
+                                contact={ contact }
+                                onClick={ () => props.onContactClick(contact) } />
+                        </div>
                     ))}
                 </div>
             </div>

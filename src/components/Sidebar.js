@@ -5,7 +5,7 @@ import ContactList from "./ContactList";
 import ModalScreen from "./ModalScreen";
 import ProfileForm from "./ProfileForm";
 
-const Sidebar = (props) => {
+const Sidebar = () => {
     const { user, Logout } = useAuth();
     const [openProfileForm, setOpenProfileForm] = useState(false);
 

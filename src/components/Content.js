@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useContacts } from "../contexts/data";
+import { useContacts } from "../contexts/contact";
 import moment from "moment";
 import Header from "./Header";
 import ModalScreen from "./ModalScreen";
 
-const Content = (props) => {
+const Content = () => {
     const { selectedContact } = useContacts();
     const [profile, setProfile] = useState(null);
     const [openContactForm, setOpenContactForm] = useState(false);
