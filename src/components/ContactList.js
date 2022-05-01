@@ -40,7 +40,8 @@ const ContactList = (props) => {
     };
 
     const filterContacts = (contact) => {
-        return contact.name.toLowerCase().includes(search);
+        return contact.name.toLowerCase().includes(search) || 
+            contact.lastname.toLowerCase().includes(search);
     };
 
     return (
@@ -98,8 +99,8 @@ const ContactList = (props) => {
             <ModalScreen 
                 show={ showModal }
                 onHide={ () => setShowModal(false) }
-                title={ form.title }>
-
+                title={ form.title }
+            >
                 { form.content }
             </ModalScreen>
         </>

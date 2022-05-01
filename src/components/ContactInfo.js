@@ -1,12 +1,13 @@
 import React, { useState } from "react";
+import { useContacts } from "../contexts/contact";
 import { Form, Button, Alert, Container } from "react-bootstrap";
+import moment from "moment";
 import ProfileImage from "./ProfileImage";
-import { useAuth } from "../contexts/auth";
 
-const ProfileForm = (props) => {
-    const { user, UpdateUser, ChangeImage } = useAuth();
-    const [name, setName] = useState(user.name);
-    const [lastname, setLastname] = useState(user.lastname);
+const ContactInfo = (props) => {
+    const { selectedContact, UpdateContact } = useContacts();
+    const [name, setName] = useState(selectedContact.name);
+    const [lastname, setLastname] = useState(selectedContact.lastname);
     const [validated, setValidated] = useState(false);
     const [messageAlert, setMessageAlert] = useState("");
     const [showAlert, setShowAlert] = useState(false);
@@ -26,15 +27,6 @@ const ProfileForm = (props) => {
         }
     };
 
-    const handleRoundImageChange = async (file) => {
-        try {
-            await ChangeImage(file);
-        } catch(err) {
-            setMessageAlert(err);
-            setShowAlert(true);
-        }
-    };
-
     const handleSubmit = async (event) => {
         const form = event.currentTarget;
     
@@ -43,7 +35,7 @@ const ProfileForm = (props) => {
 
         if (form.checkValidity() === true) {
             try {
-                await UpdateUser(user.id, name, lastname);
+                await UpdateContact(selectedContact.id, name, lastname);
                 props.onHide();
             } catch(err) {
                 setMessageAlert(err);
@@ -66,11 +58,16 @@ const ProfileForm = (props) => {
             </Alert>
 
             <ProfileImage 
-                profile={ user } 
+                profile={ selectedContact } 
                 size={ 160 } 
-                readOnly={ false } 
-                onChange={ handleRoundImageChange }
+                readOnly={ true }
                 className="m-auto" />
+
+            <div className="d-flex mt-2 mb-2 justify-content-center">
+                <small>
+                    { `Visto por último hoje às ${moment(selectedContact.updatedAt).format("hh:mm")}` }
+                </small>
+            </div>
 
             <Form noValidate validated={ validated } onSubmit={ handleSubmit }>
                 <Form.Group className="mb-3" controlId="formID">
@@ -79,11 +76,8 @@ const ProfileForm = (props) => {
                         type="text" 
                         placeholder="Telefone"
                         name="id"
-                        value={ user.id }
+                        value={ selectedContact.id }
                         disabled />
-                    <Form.Control.Feedback type="invalid">
-                        Informe seu ID.
-                    </Form.Control.Feedback> 
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formFirstName">
@@ -96,7 +90,7 @@ const ProfileForm = (props) => {
                         onChange={ handleChange }
                         required />
                     <Form.Control.Feedback type="invalid">
-                        Informe seu nome.
+                        Informe o nome.
                     </Form.Control.Feedback> 
                 </Form.Group>
 
@@ -110,7 +104,7 @@ const ProfileForm = (props) => {
                         onChange={ handleChange }
                         required />
                     <Form.Control.Feedback type="invalid">
-                        Informe seu sobrenome.
+                        Informe o sobrenome.
                     </Form.Control.Feedback> 
                 </Form.Group>
 
@@ -124,4 +118,4 @@ const ProfileForm = (props) => {
     );
 };
 
-export default ProfileForm;
+export default ContactInfo;

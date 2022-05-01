@@ -58,15 +58,15 @@ const SignIn = () => {
                         <h3>Entrar</h3>
 
                         <Form.Group className="mb-3" controlId="formID">
-                            <Form.Label>ID</Form.Label>
+                            <Form.Label>Telefone</Form.Label>
                             <Form.Control 
                                 type="text" 
-                                placeholder="ID"
+                                placeholder="Telefone"
                                 name="id"
                                 autoFocus
                                 required />
                             <Form.Control.Feedback type="invalid">
-                                Informe seu ID.
+                                Informe seu telefone.
                             </Form.Control.Feedback>    
                         </Form.Group>
 

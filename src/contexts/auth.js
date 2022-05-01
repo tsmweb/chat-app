@@ -1,15 +1,10 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import * as authService from "../services/auth";
+import * as fileService from "../services/file";
 import { setToken, clearSessionStorage } from "../services/token";
 
-const AuthContext = createContext({
-    signed: false,
-    user: null,
-    Login: null,
-    Logout: null,
-    Refresh: null
-});
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -42,8 +37,10 @@ export const AuthProvider = ({ children }) => {
         if (resp.status === 200) {
             const profile = {
                 "id": resp.data.id,
-                "name": `${resp.data.name} ${resp.data.lastname}`,
-                "description": resp.data.id
+                "name": resp.data.name,
+                "lastname": resp.data.lastname,
+                "description": resp.data.id,
+                "updateAt": Date.now()
             };
             
             setUser(profile);
@@ -58,10 +55,44 @@ export const AuthProvider = ({ children }) => {
         clearSessionStorage();
     };
 
+    const UpdateUser = async (id, name, lastname) => {
+        const resp = await authService.updateUser(id, name, lastname);
+        if (resp.status === 200) {
+            try {
+                await Refresh();
+            } catch(err) {
+                console.log("[!] AuthProvider.UpdateUser: ", err);
+            }
+        } else {
+            console.log("[!] AuthProvider.UpdateUser: ", resp.data.error_message);
+            throw "Não foi possível atualizar o usuário!";
+        }
+    };
+
+    const ChangeImage = async (file) => {
+        const resp = await fileService.uploadUserPhoto(file);
+        if (resp.status === 201) {
+            try {
+                await Refresh();
+            } catch(err) {
+                console.log("[!] AuthProvider.ChangeImage: ", err);
+            }
+        } else {
+            console.log("[!] AuthProvider.ChangeImage: ", resp.data.error_message);
+            throw "Não foi possível alterar a imagem do usuário!";
+        }
+    };
+
     return (
-        <AuthContext.Provider 
-            value={{ signed: user != null, user, Login, Logout, Refresh }}
-        >
+        <AuthContext.Provider value={{ 
+            signed: user != null, 
+            user, 
+            Login, 
+            Logout, 
+            Refresh,
+            UpdateUser,
+            ChangeImage 
+        }}>
             { children }
         </AuthContext.Provider>
     );

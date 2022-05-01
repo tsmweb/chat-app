@@ -1,34 +1,10 @@
-import { useEffect } from "react";
+import React from "react";
 import Moment from "react-moment";
-import RoundImage from "./RoundImage";
-import * as fileService from "../services/file";
-import { useHttpRespImage } from "../hooks/hooks";
+import ProfileImage from "./ProfileImage";
 import { useContacts } from "../contexts/contact";
-import imgAvatar from "../assets/img/avatar.png";
 
-const ContactItem = (props) => {
-    const contact = props.contact;
+const ContactItem = ({ contact }) => {
     const { setSelectedContact } = useContacts();
-    const { image, loadImage } = useHttpRespImage(imgAvatar);
-
-    useEffect(() => {
-        (async () => {
-            await fetchImage();
-        })();
-        // eslint-disable-next-line
-    }, [contact]);
-
-    const fetchImage = async () => {
-        let resp = undefined;
-
-        if (contact.isGroup) {
-            resp = await fileService.getGroupPhoto(contact.id);
-        } else {
-            resp = await fileService.getUserPhoto(contact.id);
-        }
-
-        loadImage(resp);
-    };
 
     const handleClick = () => {
         setSelectedContact(contact);
@@ -36,10 +12,9 @@ const ContactItem = (props) => {
 
     return (
         <div className="d-flex w-100 align-content-center">
-            <RoundImage 
-                src={ image } 
-                size={ 44 } 
-                title={ contact.name }
+            <ProfileImage 
+                profile={ contact } 
+                size={ 44 }
                 readOnly={ true }
                 className="me-2 flex-shrink-0" />
 
@@ -49,7 +24,7 @@ const ContactItem = (props) => {
             >
                 <div className="d-flex justify-content-between"> 
                     <strong>
-                        { contact.name }
+                        { `${contact.name} ${contact.lastname}` }
                     </strong>
                     <small className="text-secondary">
                         <Moment format="hh:mm">

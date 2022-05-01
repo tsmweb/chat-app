@@ -1,17 +1,56 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { CameraFill } from "react-bootstrap-icons";
 import { Overlay, Popover, ListGroup } from "react-bootstrap";
+import * as fileService from "../services/file";
 import ModalScreen from "./ModalScreen";
+import imgLoading from "../assets/img/loading.gif";
+import imgAvatar from "../assets/img/avatar.png";
 
-const RoundImage = (props) => {
+const ProfileImage = ({ profile, size, readOnly, onChange, className }) => {
+    const [currentSrc, setCurrentSrc] = useState(imgLoading);
+    const [loading, setLoading] = useState(true);
+
     const [display, setDisplay] = useState("none");
     const [show, setShow] = useState(false);
     const [showImage, setShowImage] = useState(false);
     const target = useRef(null);
     const inputImageRef = useRef(null);
 
+    useEffect(() => {
+        (async () => {
+            await fetchImage();
+            // console.log(`[*] fetchImage(${profile.id})`);
+        })();
+        // eslint-disable-next-line
+    }, [profile.id, profile.updateAt]);
+
+    const fetchImage = async () => {
+        setCurrentSrc(imgLoading);
+        setLoading(true);
+
+        let img = null;
+
+        if (profile.isGroup === true) {
+            img = await fileService.getGroupPhoto(profile.id);
+        } else {
+            img = await fileService.getUserPhoto(profile.id);
+        }
+        
+        if (img === null) {
+            img = imgAvatar;
+        }
+
+        // start loading original image
+        const imageToLoad = new Image();
+        imageToLoad.src = img;
+        imageToLoad.onload = () => {
+            setCurrentSrc(img);
+            setLoading(false);
+        };
+    };
+
     const handleClick = (event) => {
-        if (props.readOnly) {
+        if (readOnly) {
             setShowImage(true);
         } else {
             show ? hideMenu() : showMenu();
@@ -29,7 +68,7 @@ const RoundImage = (props) => {
     };
 
     const handleFileChange = (event) => {
-        props.onChange(event.target.files[0]);
+        onChange(event.target.files[0]);
     };
 
     const showMenu = () => {
@@ -46,17 +85,20 @@ const RoundImage = (props) => {
         <>
             <div 
                 style={{
-                    width: `${props.size}px`,
-                    height: `${props.size}px`,
+                    width: `${size}px`,
+                    height: `${size}px`,
                     borderRadius: "50%",
 
-                    backgroundImage: `url(${props.src})`,
+                    backgroundImage: `url(${currentSrc})`,
                     backgroundRepeat: "no-repeat",
                     backgroundSize: "cover",
-                    backgroundPosition: "center"
+                    backgroundPosition: "center",
+
+                    opacity: loading ? 0.5 : 1,
+                    transition: "opacity .15s linear"
                 }}
                 
-                className={ props.className }
+                className={ className }
                 onClick={ handleClick }
                 role="button"
             >
@@ -109,10 +151,10 @@ const RoundImage = (props) => {
             <ModalScreen 
                 show={ showImage }
                 onHide={ () => setShowImage(false) }
-                title={ props.title }
+                title={ `${profile.name} ${profile.lastname}` }
             >
-                <img src={ props.src } 
-                    alt={ props.title }
+                <img src={ currentSrc } 
+                    alt={ `${profile.name} ${profile.lastname}` }
                     style={{ 
                         width: "100%", 
                         height: "100%", 
@@ -123,4 +165,4 @@ const RoundImage = (props) => {
     );
 };
 
-export default RoundImage;
+export default ProfileImage;

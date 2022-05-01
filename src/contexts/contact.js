@@ -29,8 +29,17 @@ export const ContactsProvider = ({ children }) => {
             setContacts(contactList);
 
             if (contactList.length > 0) {
-                setSelectedContact(contactList[0]);
-            }
+                if (selectedContact === null) {
+                    setSelectedContact(contactList[0]);
+                } else {
+                    const sc = contactList.find(contact => contact.id === selectedContact.id)
+                    if (sc !== undefined) {
+                        setSelectedContact(sc);
+                    } else {
+                        setSelectedContact(contactList[0]);
+                    }
+                }
+            }            
         } catch(err) {
             console.log("[!] ContactsProvider.LoadContacts: ", err);
         }
@@ -39,12 +48,13 @@ export const ContactsProvider = ({ children }) => {
     const AddContact = async (id, name, lastname) => {
         const contact = {
             id: id,
-            name: `${name} ${lastname}`,
+            name: name,
+            lastname: lastname,
             lastMessage: id,
             unreadMessages: 0,
             updatedAt: Date.now(),
             isGroup: false
-        }
+        };
 
         const resp = await userService.addContact(id, name, lastname);
         if (resp.status === 201) {
@@ -69,8 +79,18 @@ export const ContactsProvider = ({ children }) => {
         }
     };
 
-    const UpdateContact = async (contact) => {
-        const resp = await userService.updateContact(contact.id, contact.name, contact.lastname);
+    const UpdateContact = async (id, name, lastname) => {
+        const contact = {
+            id: id,
+            name: name,
+            lastname: lastname,
+            lastMessage: id,
+            unreadMessages: 0,
+            updatedAt: Date.now(),
+            isGroup: false
+        };
+
+        const resp = await userService.updateContact(id, name, lastname);
         if (resp.status === 200) {
             try {
                 await cacheDB.addContact(contact);

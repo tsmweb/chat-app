@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as config from "../config/config";
+import * as helper from "../helpers/helper";
 import { getToken } from "./token";
 
 const http = axios.create({
@@ -16,7 +17,11 @@ export const getUserPhoto = async (userID) => {
             },
             responseType: "blob"
         }).then(res => {
-            return res;
+            if (res.status === 200) {
+                return helper.readAsDataURL(res.data);
+            }
+
+            return null;
         }).catch(err => {
             return err.response;
         })
@@ -54,7 +59,11 @@ export const getGroupPhoto = async (groupID) => {
             },
             responseType: "blob"
         }).then(res => {
-            return res;
+            if (res.status === 200) {
+                return helper.readAsDataURL(res.data);
+            }
+
+            return null;
         }).catch(err => {
             return err.response;
         })

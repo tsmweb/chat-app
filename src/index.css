@@ -111,3 +111,14 @@ body, html, .App, #root {
   background-color: #ebebeb;
   padding: 0.5rem;
 }
+
+.chat-bg {
+  background-image: url("./assets/img/bg_chat.png");
+}
+
+.chat-input {
+  box-shadow: 0 0 0 0;
+  border: 0 none;
+  outline: 0;
+  width: 100%;
+}

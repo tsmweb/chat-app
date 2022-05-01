@@ -254,7 +254,8 @@ export const fetchContacts = async () => {
         contacts = respContact.data.map(contact => {
             return {
                 "id": contact.id,
-                "name": `${contact.name} ${contact.lastname}`,
+                "name": contact.name,
+                "lastname": contact.lastname,
                 "lastMessage": contact.id,
                 "unreadMessages": 0,
                 "updatedAt": Date.now(),
@@ -268,6 +269,7 @@ export const fetchContacts = async () => {
                 return {
                     "id": group.id,
                     "name": group.name,
+                    "lastname": "",
                     "lastMessage": group.description,
                     "unreadMessages": 0,
                     "updatedAt": Date.now(),
