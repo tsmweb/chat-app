@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useContacts } from "../contexts/contact";
 import moment from "moment";
 import Header from "./Header";
 import ModalScreen from "./ModalScreen";
 import ContactInfo from "./ContactInfo";
 import GroupInfo from "./GroupInfo";
-import ChatSendMessage from "./ChatSendMenssage";
+import Chat from "./Chat";
+import ChatSendMessage from "./ChatSendMessage";
 
 const Content = () => {
     const { selectedContact } = useContacts();
@@ -83,18 +84,17 @@ const Content = () => {
 
     return (
         <>
-            <div className="d-flex flex-column h-100 border-start chat-bg">
+            <div className="container-fluid vh-100 d-flex flex-column border-start chat-bg p-0">
                 <Header 
                     className="flex-grow-0"
                     menu={ menu } 
                     profile={ profile } 
                     onClick={ handleHeaderClick } />
 
-                <div className="flex-grow-1 p-2">
-                    <h1>Chat</h1>
-                </div>
+                <Chat
+                    className="flex-grow-1" />
 
-               <ChatSendMessage 
+                <ChatSendMessage 
                     className="flex-grow-0" />
             </div>
 

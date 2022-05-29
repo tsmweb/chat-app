@@ -22,7 +22,7 @@ const Sidebar = () => {
 
     return (
         <>
-            <div className="h-100 bg-white">
+            <div className="h-100 bg-light">
                 <Header 
                     menu={ menu } 
                     profile={ user } 

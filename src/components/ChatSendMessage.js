@@ -15,11 +15,11 @@ const ChatSendMessage = ({ className }) => {
     };
 
     const handleAttachmentClick = () => {
-        
+
     };
 
     return (
-        <div className={`d-flex justify-content-between p-2 ${className}`}>
+        <div className={`container-fluid d-flex justify-content-between p-2 ${className}`}>
             <div className="d-flex w-100 border border-1 rounded-pill bg-white ps-3 pe-3 pt-2 pb-2 shadow-sm">
                 <input className="chat-input"
                     type="text" 
@@ -29,7 +29,8 @@ const ChatSendMessage = ({ className }) => {
                     value={ message }
                     onChange={ handleChange } />
 
-                <i className="fa fa-paperclip fa-2x" 
+                <i className="fa fa-paperclip"
+                    style={{ fontSize: "1.5em" }} 
                     aria-hidden="true"
                     role="button"
                     onClick={ handleAttachmentClick }></i>

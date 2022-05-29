@@ -69,3 +69,24 @@ export const getGroupPhoto = async (groupID) => {
         })
     )
 };
+
+export const getMedia = async (uri) => {
+    return (
+        http({
+            method: "GET",
+            url: `/media/${uri}`,
+            headers: {
+                Authorization: `Bearer ${ getToken() }`
+            },
+            responseType: "blob"
+        }).then(res => {
+            if (res.status === 200) {
+                return helper.readAsDataURL(res.data);
+            }
+
+            return null;
+        }).catch(err => {
+            return err.response;
+        })
+    )
+};
