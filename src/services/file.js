@@ -23,7 +23,8 @@ export const getUserPhoto = async (userID) => {
 
             return null;
         }).catch(err => {
-            return err.response;
+            // return err.response;
+            return null;
         })
     )
 };
@@ -65,7 +66,8 @@ export const getGroupPhoto = async (groupID) => {
 
             return null;
         }).catch(err => {
-            return err.response;
+            // return err.response;
+            return null;
         })
     )
 };
@@ -86,7 +88,8 @@ export const getMedia = async (uri) => {
 
             return null;
         }).catch(err => {
-            return err.response;
+            // return err.response;
+            return null;
         })
     )
 };

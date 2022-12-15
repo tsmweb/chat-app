@@ -113,7 +113,7 @@ const Chat = ({ className }) => {
                 {messages.map(msg => 
                   <Balloon 
                         key={ msg.id }
-                        className={ user.id == msg.from ? "chat-balloon-right" : "chat-balloon-left" } 
+                        className={ user.id === msg.from ? "chat-balloon-right" : "chat-balloon-left" } 
                         message={ msg } />
                 )}
             </div>
