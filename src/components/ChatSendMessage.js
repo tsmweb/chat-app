@@ -1,21 +1,61 @@
 import React, { useState } from "react";
 import { SendFill } from "react-bootstrap-icons";
+import { useAuth } from "../contexts/auth";
+import { useContacts } from "../contexts/contact";
+import { useMessages } from "../contexts/message";
+import moment from "moment";
+import sha1 from "sha1";
 
 const ChatSendMessage = ({ className }) => {
-    const [message, setMessage] = useState("");
+    const { user } = useAuth();
+    const { selectedContact } = useContacts();
+    const { AddMessage } = useMessages();
+
+    const [entry, setEntry] = useState("");
 
     const handleChange = (event) => {
         const { value } = event.target;
-        setMessage(value);
+        setEntry(value);
     };
 
-    const handleSendClick = () => {
-        alert(message);
-        setMessage("");
+    const handleSendClick = async () => {
+        const tag = user.id + selectedContact.id;
+        const from = user.id;
+        const to = !selectedContact.isGroup ? selectedContact.id : "";
+        const group = selectedContact.isGroup ? selectedContact.id : "";
+        const content_type = "text";
+        const content = entry;
+        const hour = moment(Date()).format("hh:mm");
+        const date = moment(Date()).format("YYYY-MM-DD");
+        const timestamp = Date.now();
+        const ack = "sent";
+        const date_ack = timestamp;
+        const id = sha1(from + to + group + Date.now());
+
+        try {
+            await AddMessage(
+                id,
+                tag,
+                from,
+                to,
+                group,
+                content_type,
+                content,
+                hour,
+                date,
+                timestamp,
+                ack, 
+                date_ack
+            );
+        } catch(err) {
+            console.log("[!] ChatSendMessage: ", err);
+        }
+
+        setEntry("");
     };
 
     const handleAttachmentClick = () => {
-
+        alert("Anexo!");
     };
 
     return (
@@ -24,9 +64,9 @@ const ChatSendMessage = ({ className }) => {
                 <input className="chat-input"
                     type="text" 
                     placeholder="Digite uma mensagem" 
-                    name="message"
+                    name="entry"
                     aria-label="Digite uma mensagem"
-                    value={ message }
+                    value={ entry }
                     onChange={ handleChange } />
 
                 <i className="fa fa-paperclip"

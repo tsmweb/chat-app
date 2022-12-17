@@ -26,7 +26,9 @@ export const MessagesProvider = ({ children }) => {
         }
     };
 
-    const AddMessage = async (id, tag, from, to, group, content_type, content, date) => {
+    const AddMessage = async (
+        id, tag, from, to, group, content_type, content, hour, date, timestamp, ack, date_ack,
+    ) => {
         const message = {
             id: id,
             tag: tag,
@@ -35,12 +37,21 @@ export const MessagesProvider = ({ children }) => {
             group: group,
             content_type: content_type,
             content: content,
+            hour: hour,
             date: date,
+            timestamp: timestamp,
+            ack: ack,
+            date_ack: date_ack,
         };
 
         try {
             await cacheDB.addMessage(message);
-            //TODO refresh messages
+            // refresh messages
+            setMessages(prevMessages => {
+                let newMessages = [...prevMessages];
+                newMessages.push(message);
+                return newMessages;
+            });
         } catch(err) {
             console.log("[!] MessagesProvider.AddMessage: ", err);
             throw "Não foi possível adicionar a mensagem!";

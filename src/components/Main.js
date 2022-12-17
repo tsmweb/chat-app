@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { ContactsProvider } from "../contexts/contact";
+import { MessagesProvider } from "../contexts/message";
 import Content from "./Content";
 import Sidebar from "./Sidebar";
 
@@ -14,7 +15,9 @@ const Main = () => {
                         <Sidebar />
                     </Col>
                     <Col sm={8} className="p-0">
-                        <Content />
+                        <MessagesProvider>
+                            <Content />
+                        </MessagesProvider>
                     </Col>
                 </Row>
             </Container>
