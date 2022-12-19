@@ -93,7 +93,7 @@ export const getAllGroupMessages = async (group) => {
 
 export const deleteContactMessages = async (tag) => {
     const tx = db.transaction(CHAT_STORE,  "readwrite");
-    const index = tx.store.index(CHAT_TAG_INDEX)
+    const index = tx.store.index(CHAT_TAG_INDEX);
 
     for await (const cursor of index.iterate(tag)) {
         const id = cursor.primaryKey;
@@ -105,7 +105,7 @@ export const deleteContactMessages = async (tag) => {
 
 export const deleteGroupMessages = async (group) => {
     const tx = db.transaction(CHAT_STORE,  "readwrite");
-    const index = tx.store.index(CHAT_GROUP_INDEX)
+    const index = tx.store.index(CHAT_GROUP_INDEX);
 
     for await (const cursor of index.iterate(group)) {
         const id = cursor.primaryKey;

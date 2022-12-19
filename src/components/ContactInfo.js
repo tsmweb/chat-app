@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useContacts } from "../contexts/contact";
 import { Form, Button, Alert, Container } from "react-bootstrap";
-import moment from "moment";
 import ProfileImage from "./ProfileImage";
+import ContactStatusDescription from "./ContactStatusDescription";
 
 const ContactInfo = (props) => {
     const { selectedContact, UpdateContact } = useContacts();
@@ -72,9 +72,7 @@ const ContactInfo = (props) => {
                 className="m-auto" />
 
             <div className="d-flex mt-2 mb-2 justify-content-center">
-                <small>
-                    { `Visto por último hoje às ${moment(selectedContact.updatedAt).format("hh:mm")}` }
-                </small>
+                <ContactStatusDescription contact={ selectedContact }/>
             </div>
 
             <Form noValidate validated={ validated } onSubmit={ handleSubmit }>

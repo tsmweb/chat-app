@@ -1,6 +1,6 @@
 import React from "react";
-import Moment from "react-moment";
 import ProfileImage from "./ProfileImage";
+import ContactLastMessageAt from "./ContactLastMessageAt";
 import { useContacts } from "../contexts/contact";
 
 const ContactItem = ({ contact }) => {
@@ -18,7 +18,7 @@ const ContactItem = ({ contact }) => {
                 readOnly={ true }
                 className="me-2 flex-shrink-0" />
 
-            <div className="d-flex flex-column w-100"
+            <div className="d-flex flex-column w-85"
                 onClick={ handleClick }
                 role="button"
             >
@@ -26,15 +26,12 @@ const ContactItem = ({ contact }) => {
                     <strong>
                         { `${contact.name} ${contact.lastname}` }
                     </strong>
-                    <small className="text-secondary">
-                        <Moment format="hh:mm">
-                            { contact.updatedAt }
-                        </Moment>
-                    </small>
+                    
+                    <ContactLastMessageAt contact={ contact } />
                 </div>
                 
                 <div className="d-flex justify-content-between">
-                    <small>
+                    <small style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
                         { contact.lastMessage }
                     </small>
                     

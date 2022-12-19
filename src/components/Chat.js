@@ -28,8 +28,11 @@ const Chat = ({ className }) => {
         if (msg1.timestamp > msg2.timestamp) {
             return 1;
         }
-        return -1;
-    }
+        if (msg1.timestamp < msg2.timestamp) {
+            return -1;
+        }
+        return 0;
+    };
 
     return (
         <div className={ `container-fluid d-flex flex-column-reverse overflow-auto flex-grow-1 flex-b p-3 ${className}` }>
@@ -37,7 +40,8 @@ const Chat = ({ className }) => {
                 {messages.sort(onSortMessages).map(msg => 
                   <Balloon 
                         key={ msg.id }
-                        className={ user.id === msg.from ? "chat-balloon-right" : "chat-balloon-left" } 
+                        className={ user.id === msg.from ? "chat-balloon-right" : "chat-balloon-left" }
+                        isContact={ user.id !== msg.from } 
                         message={ msg } />
                 )}
             </div>

@@ -86,7 +86,9 @@ const ContactList = (props) => {
                         </div>
                     </a>
 
-                    { contacts.filter(filterContacts).map(contact => (
+                    { contacts
+                        .filter(filterContacts)
+                        .map(contact => (
                         <div key={ contact.id } className="list-group-item list-group-item-action">
                             <ContactItem
                                 contact={ contact }

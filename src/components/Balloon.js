@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Check, CheckAll } from "react-bootstrap-icons";
 import ImageView from "./ImageView";
 
-const Balloon = ({ className, message }) => {
+const Balloon = ({ className, isContact, message }) => {
     const [ack, setAck] = useState({type: "sent", color: "#5e5e5e"});
     const [isMedia, setIsMedia] = useState(false);
 
@@ -70,11 +70,13 @@ const Balloon = ({ className, message }) => {
                         { message.hour }
                     </span>
 
+                    {!isContact &&
                     <span style={{ fontSize: ".7em", color: `${ack.color}` }} className="p-0">
                         {ack.type === "sent" 
                             ? <Check size={18} />
                             : <CheckAll size={18} />}
                     </span>
+                    }
                 </div>
 
             </div>

@@ -2,6 +2,11 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import * as userService from "../services/user";
 import * as cacheDB from "../services/cacheDB";
 
+export const ContactStatus = {
+    ONLINE: "online",
+    OFFLINE: "offline"
+};
+
 const ContactsContext = createContext();
 
 export const ContactsProvider = ({ children }) => {
@@ -25,6 +30,18 @@ export const ContactsProvider = ({ children }) => {
                 await cacheDB.addContacts(contactList);
             } else {
                 contactList = await cacheDB.getAllContacts();
+            }
+
+            if (contactList.length > 0) {
+                contactList = contactList.sort((c1, c2) => {
+                    if (c1.lastMessageAt > c2.lastMessageAt) {
+                        return -1;
+                    }
+                    if (c1.lastMessageAt < c2.lastMessageAt) {
+                        return 1;
+                    }
+                    return 0;
+                });
             }
 
             setContacts(contactList);
@@ -52,9 +69,10 @@ export const ContactsProvider = ({ children }) => {
             name: name,
             lastname: lastname,
             lastMessage: id,
+            lastMessageAt: 0,
             unreadMessages: 0,
-            updatedAt: Date.now(),
-            status: "offline",
+            onlineAt: 0,
+            status: ContactStatus.OFFLINE,
             isGroup: false
         };
 
@@ -81,14 +99,17 @@ export const ContactsProvider = ({ children }) => {
         }
     };
 
-    const UpdateContact = async (id, name, lastname, lastMessage, unreadMessages, updatedAt, status, isGroup) => {
+    const UpdateContact = async (
+        id, name, lastname, lastMessage, lastMessageAt, unreadMessages, onlineAt, status, isGroup
+    ) => {
         const contact = {
             id: id,
             name: name,
             lastname: lastname,
             lastMessage: lastMessage,
+            lastMessageAt: lastMessageAt,
             unreadMessages: unreadMessages,
-            updatedAt: updatedAt,
+            onlineAt: onlineAt,
             status: status,
             isGroup: isGroup
         };
@@ -127,6 +148,9 @@ export const ContactsProvider = ({ children }) => {
             let contact = await cacheDB.getContact(id);
             if (contact) {
                 contact.status = status;
+                if (status === ContactStatus.ONLINE) {
+                    contact.onlineAt = Date.now();
+                }
                 await cacheDB.addContact(contact);
                 await LoadContacts(false);
             }
@@ -135,17 +159,17 @@ export const ContactsProvider = ({ children }) => {
         }
     };
 
-    const SetLastMessageContact = async (id, lastMessage, updatedAt) => {
+    const SetLastMessageContact = async (id, lastMessage, lastMessageAt) => {
         try {
             let contact = await cacheDB.getContact(id);
             if (contact) {
                 contact.lastMessage = lastMessage;
-                contact.updatedAt = updatedAt;
+                contact.lastMessageAt = lastMessageAt;
                 await cacheDB.addContact(contact);
                 await LoadContacts(false);
             }
         } catch(err) {
-            console.log("[!] ContactsProvider.SetStatusContact: ", err);
+            console.log("[!] ContactsProvider.SetLastMessageContact: ", err);
         }
     };
 

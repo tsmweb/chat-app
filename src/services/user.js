@@ -257,8 +257,9 @@ export const fetchContacts = async () => {
                 "name": contact.name,
                 "lastname": contact.lastname,
                 "lastMessage": contact.id,
+                "lastMessageAt": 0,
                 "unreadMessages": 0,
-                "updatedAt": Date.now(),
+                "onlineAt": 0,
                 "status": "offline",
                 "isGroup": false
             }
@@ -272,8 +273,9 @@ export const fetchContacts = async () => {
                     "name": group.name,
                     "lastname": "",
                     "lastMessage": group.description,
+                    "lastMessageAt": 0,
                     "unreadMessages": 0,
-                    "updatedAt": Date.now(),
+                    "onlineAt": 0,
                     "status": "offline",
                     "isGroup": true
                 }

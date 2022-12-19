@@ -22,9 +22,9 @@ const MessagesContext = createContext();
 
 export const MessagesProvider = ({ children }) => {
     const [messages, setMessages] = useState([]);
-
     const { user } = useAuth();
-    const { SetStatusContact, SetLastMessageContact } = useContacts();
+    const { selectedContact, SetStatusContact, SetLastMessageContact } = useContacts();
+
     const { sendJsonMessage } = useWebSocket(config.CHAT_SERVICE, {
         share: true,
         queryParams: { "authorization": getToken() },
@@ -51,8 +51,11 @@ export const MessagesProvider = ({ children }) => {
                 message.content_type === ContenType.VIDEO ||
                 message.content_type === ContenType.PDF
             ) {
-                const tag = message.to + message.from;
-                const hour = moment(new Date(message.date)).format("hh:mm");
+                let tag = message.to + message.from;
+                if (message.group && message.group.trim() !== "") {
+                    tag = message.group;
+                }
+                const hour = moment(new Date(message.date)).format("HH:mm");
                 const date = moment(new Date(message.date)).format("YYYY-MM-DD");
                 const timestamp = objDate.getTime();
                 const ack = "sent";
@@ -71,19 +74,17 @@ export const MessagesProvider = ({ children }) => {
                     timestamp, 
                     ack, 
                     date_ack);
-            } else  if (message.content_type === ContenType.ACK) {
+            } else if (message.content_type === ContenType.ACK) {
                 let msg = await cacheDB.getMessage(message.id);
                 if (msg) {
                     msg.ack = message.content;
                     msg.date_ack = message.date;
                 } 
                 await cacheDB.addMessage(msg);
-                await SetLastMessageContact(message.from, msg.content, msg.date_ack);
             } else if (message.content_type === ContenType.STATUS) {
                 await SetStatusContact(message.from, message.content);
             } else if (message.content_type === ContenType.ERROR ||
-                       message.content_type === ContenType.INFO
-            ) {
+                       message.content_type === ContenType.INFO) {
                 console.log(message);
             }
         })();
@@ -129,16 +130,56 @@ export const MessagesProvider = ({ children }) => {
 
         try {
             await cacheDB.addMessage(message);
+
+            if (message.group && message.group.trim() !== "") {
+                await updateGroupMessage(message);
+            } else {
+                await updateContactMessage(message);
+            }
+        } catch(err) {
+            console.log("[!] MessagesProvider.AddMessage: ", err);
+            throw "Não foi possível adicionar a mensagem!";
+        }
+    };
+
+    const updateGroupMessage = async (message) => {
+        if (selectedContact.id === message.group) {
             // refresh messages
             setMessages(prevMessages => {
                 let newMessages = [...prevMessages];
                 newMessages.push(message);
                 return newMessages;
             });
-        } catch(err) {
-            console.log("[!] MessagesProvider.AddMessage: ", err);
-            throw "Não foi possível adicionar a mensagem!";
         }
+
+        await SetLastMessageContact(message.group, message.content, message.timestamp);
+    };
+
+    const updateContactMessage = async (message) => {
+        if (selectedContact.id === message.from || selectedContact.id === message.to) {
+            // refresh messages
+            setMessages(prevMessages => {
+                let newMessages = [...prevMessages];
+                newMessages.push(message);
+                return newMessages;
+            });
+        }
+
+        const contactID = user.id === message.from ? message.to : message.from;
+        await SetLastMessageContact(contactID, message.content, message.timestamp);
+    };
+
+    const SendMessage = (id, from, to, group, content_type, content, timestamp) => {
+        const msg = {
+            id: id,
+            from: from,
+            to: to,
+            group: group,
+            content_type: content_type,
+            content: content,
+            date: moment(new Date(timestamp)).format("YYYY-MM-DDTHH:mm:ssZ")
+        };
+        sendJsonMessage(msg, true);
     };
 
     const DeleteContactMessages = async (userID, contactID) => {
@@ -169,6 +210,7 @@ export const MessagesProvider = ({ children }) => {
             LoadContactMessages,
             LoadGroupMessages,
             AddMessage,
+            SendMessage,
             DeleteContactMessages,
             DeleteGroupMessages,
         }}>

@@ -9,7 +9,7 @@ import sha1 from "sha1";
 const ChatSendMessage = ({ className }) => {
     const { user } = useAuth();
     const { selectedContact } = useContacts();
-    const { AddMessage } = useMessages();
+    const { AddMessage, SendMessage } = useMessages();
 
     const [entry, setEntry] = useState("");
 
@@ -25,14 +25,18 @@ const ChatSendMessage = ({ className }) => {
         const group = selectedContact.isGroup ? selectedContact.id : "";
         const content_type = "text";
         const content = entry;
-        const hour = moment(Date()).format("hh:mm");
-        const date = moment(Date()).format("YYYY-MM-DD");
+        const hour = moment(Date.now()).format("HH:mm");
+        const date = moment(Date.now()).format("YYYY-MM-DD");
         const timestamp = Date.now();
         const ack = "sent";
         const date_ack = timestamp;
         const id = sha1(from + to + group + Date.now());
 
         try {
+            // send message to server 
+            SendMessage(id, from, to, group, content_type, content, timestamp);
+
+            // the message persists in the local database
             await AddMessage(
                 id,
                 tag,

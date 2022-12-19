@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { useContacts } from "../contexts/contact";
-import moment from "moment";
 import Header from "./Header";
 import ModalScreen from "./ModalScreen";
 import ContactInfo from "./ContactInfo";
 import GroupInfo from "./GroupInfo";
 import Chat from "./Chat";
 import ChatSendMessage from "./ChatSendMessage";
+import { contactStatusDescription } from "../helpers/helper";
+import { useAuth } from "../contexts/auth";
+import { useContacts } from "../contexts/contact";
+import { useMessages } from "../contexts/message";
 
 const Content = () => {
+    const { user } = useAuth();
     const { selectedContact } = useContacts();
+    const { DeleteContactMessages } = useMessages();
     const [profile, setProfile] = useState(null);
     const [menu, setMenu] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -29,7 +33,11 @@ const Content = () => {
         },
         {
             "title": "Limpar conversa",
-            "onAction": null
+            "onAction": () => { 
+                (async () => {
+                    await DeleteContactMessages(user.id, selectedContact.id);
+                })();
+            }
         },
     ];
 
@@ -48,17 +56,13 @@ const Content = () => {
         if (selectedContact === null) {
             return
         }
-        
-        const updateAt = moment(selectedContact.updatedAt).format("hh:mm");
-        const description = selectedContact.status === "offline"   ? 
-                            `visto por último hoje às ${updateAt}` : 
-                            selectedContact.status;
+
         const prof = {
             "id": selectedContact.id,
             "name": selectedContact.name,
             "lastname": selectedContact.lastname,
             "isGroup": selectedContact.isGroup,
-            "description": description
+            "description": contactStatusDescription(selectedContact)
         }
         setProfile(prof);
 
