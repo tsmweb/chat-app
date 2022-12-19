@@ -21,6 +21,7 @@ const Chat = ({ className }) => {
                 await LoadContactMessages(user.id, selectedContact.id);
             }
         })();
+        // eslint-disable-next-line
     }, [selectedContact]);
 
     const onSortMessages = (msg1, msg2) => {

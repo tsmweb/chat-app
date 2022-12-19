@@ -1,10 +1,93 @@
 import React, { createContext, useContext, useState } from "react";
+import moment from "moment";
+import useWebSocket from "react-use-websocket";
 import * as cacheDB from "../services/cacheDB";
+import * as config from "../config/config";
+import { getToken } from "../services/token";
+import { useAuth } from "./auth";
+import { useContacts } from "./contact";
+
+export const ContenType = {
+    ACK: "ack",
+    TEXT: "text",
+    IMAGE: "image",
+    VIDEO: "video",
+    PDF: "pdf",
+    STATUS: "status",
+    INFO: "info",
+    ERROR: "error"
+};
 
 const MessagesContext = createContext();
 
 export const MessagesProvider = ({ children }) => {
     const [messages, setMessages] = useState([]);
+
+    const { user } = useAuth();
+    const { SetStatusContact, SetLastMessageContact } = useContacts();
+    const { sendJsonMessage } = useWebSocket(config.CHAT_SERVICE, {
+        share: true,
+        queryParams: { "authorization": getToken() },
+        shouldReconnect: (CloseEvent) => true,
+        reconnectInterval: 3000,
+        onOpen: () => console.log("Connected to WebSocket"),
+        onError: (event) => console.error(event),
+        onMessage: (event) => {
+            if (event.data) {
+                const message = JSON.parse(event.data);
+                OnMessage(message);
+            }
+        }
+    });
+
+    const OnMessage = (message) => {
+        (async () => {
+            console.log(message);
+
+            const objDate = new Date(message.date);
+
+            if (message.content_type === ContenType.TEXT || 
+                message.content_type === ContenType.IMAGE ||
+                message.content_type === ContenType.VIDEO ||
+                message.content_type === ContenType.PDF
+            ) {
+                const tag = message.to + message.from;
+                const hour = moment(new Date(message.date)).format("hh:mm");
+                const date = moment(new Date(message.date)).format("YYYY-MM-DD");
+                const timestamp = objDate.getTime();
+                const ack = "sent";
+                const date_ack = objDate.getTime();
+
+                await AddMessage(
+                    message.id, 
+                    tag, 
+                    message.from, 
+                    message.to, 
+                    message.group, 
+                    message.content_type, 
+                    message.content, 
+                    hour, 
+                    date, 
+                    timestamp, 
+                    ack, 
+                    date_ack);
+            } else  if (message.content_type === ContenType.ACK) {
+                let msg = await cacheDB.getMessage(message.id);
+                if (msg) {
+                    msg.ack = message.content;
+                    msg.date_ack = message.date;
+                } 
+                await cacheDB.addMessage(msg);
+                await SetLastMessageContact(message.from, msg.content, msg.date_ack);
+            } else if (message.content_type === ContenType.STATUS) {
+                await SetStatusContact(message.from, message.content);
+            } else if (message.content_type === ContenType.ERROR ||
+                       message.content_type === ContenType.INFO
+            ) {
+                console.log(message);
+            }
+        })();
+    };
 
     const LoadContactMessages = async (userID, contactID) => {
         const tag = userID+contactID;
@@ -27,7 +110,7 @@ export const MessagesProvider = ({ children }) => {
     };
 
     const AddMessage = async (
-        id, tag, from, to, group, content_type, content, hour, date, timestamp, ack, date_ack,
+        id, tag, from, to, group, content_type, content, hour, date, timestamp, ack, date_ack
     ) => {
         const message = {
             id: id,

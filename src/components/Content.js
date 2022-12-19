@@ -50,12 +50,15 @@ const Content = () => {
         }
         
         const updateAt = moment(selectedContact.updatedAt).format("hh:mm");
+        const description = selectedContact.status === "offline"   ? 
+                            `visto por último hoje às ${updateAt}` : 
+                            selectedContact.status;
         const prof = {
             "id": selectedContact.id,
             "name": selectedContact.name,
             "lastname": selectedContact.lastname,
             "isGroup": selectedContact.isGroup,
-            "description": `visto por último hoje às ${updateAt}`
+            "description": description
         }
         setProfile(prof);
 

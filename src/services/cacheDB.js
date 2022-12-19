@@ -58,6 +58,10 @@ export const addContacts = async (contacts) => {
     return await Promise.all(op);
 };
 
+export const getContact = async (id) => {    
+    return await db.get(CONTACT_STORE, id);
+};
+
 export const deleteContact = async (id) => {
     return await db.delete(CONTACT_STORE, id);
 };
@@ -73,6 +77,10 @@ export const getAllContacts = async () => {
 /* CHAT MESSAGE */
 export const addMessage = async (message) => {
     return await db.put(CHAT_STORE, message);
+};
+
+export const getMessage = async (id) => {    
+    return await db.get(CHAT_STORE, id);
 };
 
 export const getAllContactMessages = async (tag) => {

@@ -12,6 +12,7 @@ export const ContactsProvider = ({ children }) => {
         (async () => {
             LoadContacts(true);
         })();
+        // eslint-disable-next-line
     }, []);
 
     const LoadContacts = async (updateCache = false) => {
@@ -53,6 +54,7 @@ export const ContactsProvider = ({ children }) => {
             lastMessage: id,
             unreadMessages: 0,
             updatedAt: Date.now(),
+            status: "offline",
             isGroup: false
         };
 
@@ -79,15 +81,16 @@ export const ContactsProvider = ({ children }) => {
         }
     };
 
-    const UpdateContact = async (id, name, lastname) => {
+    const UpdateContact = async (id, name, lastname, lastMessage, unreadMessages, updatedAt, status, isGroup) => {
         const contact = {
             id: id,
             name: name,
             lastname: lastname,
-            lastMessage: id,
-            unreadMessages: 0,
-            updatedAt: Date.now(),
-            isGroup: false
+            lastMessage: lastMessage,
+            unreadMessages: unreadMessages,
+            updatedAt: updatedAt,
+            status: status,
+            isGroup: isGroup
         };
 
         const resp = await userService.updateContact(id, name, lastname);
@@ -119,6 +122,33 @@ export const ContactsProvider = ({ children }) => {
         }
     };
 
+    const SetStatusContact = async (id, status) => {
+        try {
+            let contact = await cacheDB.getContact(id);
+            if (contact) {
+                contact.status = status;
+                await cacheDB.addContact(contact);
+                await LoadContacts(false);
+            }
+        } catch(err) {
+            console.log("[!] ContactsProvider.SetStatusContact: ", err);
+        }
+    };
+
+    const SetLastMessageContact = async (id, lastMessage, updatedAt) => {
+        try {
+            let contact = await cacheDB.getContact(id);
+            if (contact) {
+                contact.lastMessage = lastMessage;
+                contact.updatedAt = updatedAt;
+                await cacheDB.addContact(contact);
+                await LoadContacts(false);
+            }
+        } catch(err) {
+            console.log("[!] ContactsProvider.SetStatusContact: ", err);
+        }
+    };
+
     return (
         <ContactsContext.Provider value={{
             contacts, 
@@ -127,7 +157,9 @@ export const ContactsProvider = ({ children }) => {
             LoadContacts, 
             AddContact, 
             UpdateContact,
-            DeleteContact
+            DeleteContact,
+            SetStatusContact,
+            SetLastMessageContact
         }}>
             { children }
         </ContactsContext.Provider>

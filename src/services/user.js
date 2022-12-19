@@ -259,6 +259,7 @@ export const fetchContacts = async () => {
                 "lastMessage": contact.id,
                 "unreadMessages": 0,
                 "updatedAt": Date.now(),
+                "status": "offline",
                 "isGroup": false
             }
         });
@@ -273,6 +274,7 @@ export const fetchContacts = async () => {
                     "lastMessage": group.description,
                     "unreadMessages": 0,
                     "updatedAt": Date.now(),
+                    "status": "offline",
                     "isGroup": true
                 }
             });

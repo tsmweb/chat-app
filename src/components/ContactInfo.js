@@ -35,7 +35,15 @@ const ContactInfo = (props) => {
 
         if (form.checkValidity() === true) {
             try {
-                await UpdateContact(selectedContact.id, name, lastname);
+                await UpdateContact(
+                    selectedContact.id, 
+                    name, 
+                    lastname, 
+                    selectedContact.lastMessage,
+                    selectedContact.unreadMessages,
+                    selectedContact.updatedAt,
+                    selectedContact.status,
+                    selectedContact.isGroup);
                 props.onHide();
             } catch(err) {
                 setMessageAlert(err);
