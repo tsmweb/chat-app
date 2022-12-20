@@ -93,3 +93,24 @@ export const getMedia = async (uri) => {
         })
     )
 };
+
+export const uploadMedia = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return (
+        http({
+            method: "POST",
+            url: `/media`,
+            data: formData,
+            headers: {
+                Authorization: `Bearer ${ getToken() }`,
+                "Content-Type": "multipart/form-data"
+            },
+        }).then(res => {
+            return res;
+        }).catch(err => {
+            return err.response;
+        })
+    )
+};

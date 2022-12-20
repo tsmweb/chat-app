@@ -5,9 +5,11 @@ import ImageView from "./ImageView";
 const Balloon = ({ className, isContact, message }) => {
     const [ack, setAck] = useState({type: "sent", color: "#5e5e5e"});
     const [isMedia, setIsMedia] = useState(false);
+    const [media, setMedia] = useState({});
 
     useEffect(() => {
-        if (message.content_type.includes("image") || message.content_type.includes("video")) {
+        if (message.content_type === "media") {
+            setMedia(JSON.parse(message.content));
             setIsMedia(true);
         } else {
             setIsMedia(false);
@@ -26,7 +28,6 @@ const Balloon = ({ className, isContact, message }) => {
         }
     }, [message])
 
-
     return (
         <div className={ `chat-balloon ${className}` }>
 
@@ -40,14 +41,14 @@ const Balloon = ({ className, isContact, message }) => {
 
                 {isMedia 
                 ?   <div className="chat-balloon-media" role="button">
-                        { message.content_type.includes("image") &&
+                        { media.type.includes("image") &&
                            <ImageView
-                                src={ message.content } 
+                                src={ media.name } 
                                 title={ message.from } /> }
 
-                        { message.content_type.includes("video") && 
+                        { media.type.includes("video") && 
                             <span className="font-normal text-break">
-                                { message.content }
+                                { media.name }
                             </span>
                         }
                     </div>

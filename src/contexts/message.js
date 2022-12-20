@@ -10,9 +10,7 @@ import { useContacts } from "./contact";
 export const ContenType = {
     ACK: "ack",
     TEXT: "text",
-    IMAGE: "image",
-    VIDEO: "video",
-    PDF: "pdf",
+    MEDIA: "media",
     STATUS: "status",
     INFO: "info",
     ERROR: "error"
@@ -47,10 +45,7 @@ export const MessagesProvider = ({ children }) => {
             const objDate = new Date(message.date);
 
             if (message.content_type === ContenType.TEXT || 
-                message.content_type === ContenType.IMAGE ||
-                message.content_type === ContenType.VIDEO ||
-                message.content_type === ContenType.PDF
-            ) {
+                message.content_type === ContenType.MEDIA) {
                 let tag = message.to + message.from;
                 if (message.group && message.group.trim() !== "") {
                     tag = message.group;
@@ -79,8 +74,8 @@ export const MessagesProvider = ({ children }) => {
                 if (msg) {
                     msg.ack = message.content;
                     msg.date_ack = message.date;
+                    await cacheDB.addMessage(msg);
                 } 
-                await cacheDB.addMessage(msg);
             } else if (message.content_type === ContenType.STATUS) {
                 await SetStatusContact(message.from, message.content);
             } else if (message.content_type === ContenType.ERROR ||
@@ -152,7 +147,8 @@ export const MessagesProvider = ({ children }) => {
             });
         }
 
-        await SetLastMessageContact(message.group, message.content, message.timestamp);
+        const content = message.content_type === "media" ? "Mídia" : message.content;
+        await SetLastMessageContact(message.group, content, message.timestamp);
     };
 
     const updateContactMessage = async (message) => {
@@ -166,7 +162,8 @@ export const MessagesProvider = ({ children }) => {
         }
 
         const contactID = user.id === message.from ? message.to : message.from;
-        await SetLastMessageContact(contactID, message.content, message.timestamp);
+        const content = message.content_type === "media" ? "Mídia" : message.content;
+        await SetLastMessageContact(contactID, content, message.timestamp);
     };
 
     const SendMessage = (id, from, to, group, content_type, content, timestamp) => {
@@ -179,6 +176,7 @@ export const MessagesProvider = ({ children }) => {
             content: content,
             date: moment(new Date(timestamp)).format("YYYY-MM-DDTHH:mm:ssZ")
         };
+        console.log(msg);
         sendJsonMessage(msg, true);
     };
 

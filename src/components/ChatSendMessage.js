@@ -5,6 +5,7 @@ import { useContacts } from "../contexts/contact";
 import { useMessages } from "../contexts/message";
 import moment from "moment";
 import sha1 from "sha1";
+import ChatChooseAttachment from "./ChatChooseAttachment";
 
 const ChatSendMessage = ({ className }) => {
     const { user } = useAuth();
@@ -19,12 +20,22 @@ const ChatSendMessage = ({ className }) => {
     };
 
     const handleSendClick = async () => {
+        await sendMessage("text", entry);
+        setEntry("");
+    };
+
+    const handleAttachmentClick = (fileName, fileType) => {
+        (async () => {
+            const media = `{"name": "${fileName}", "type": "${fileType}"}`;
+            await sendMessage("media", media);
+        })();
+    };
+
+    const sendMessage = async (content_type, content) => {
         const tag = user.id + selectedContact.id;
         const from = user.id;
         const to = !selectedContact.isGroup ? selectedContact.id : "";
         const group = selectedContact.isGroup ? selectedContact.id : "";
-        const content_type = "text";
-        const content = entry;
         const hour = moment(Date.now()).format("HH:mm");
         const date = moment(Date.now()).format("YYYY-MM-DD");
         const timestamp = Date.now();
@@ -54,12 +65,6 @@ const ChatSendMessage = ({ className }) => {
         } catch(err) {
             console.log("[!] ChatSendMessage: ", err);
         }
-
-        setEntry("");
-    };
-
-    const handleAttachmentClick = () => {
-        alert("Anexo!");
     };
 
     return (
@@ -73,11 +78,7 @@ const ChatSendMessage = ({ className }) => {
                     value={ entry }
                     onChange={ handleChange } />
 
-                <i className="fa fa-paperclip"
-                    style={{ fontSize: "1.5em" }} 
-                    aria-hidden="true"
-                    role="button"
-                    onClick={ handleAttachmentClick }></i>
+                <ChatChooseAttachment onClick={ handleAttachmentClick } />
             </div>
 
 
